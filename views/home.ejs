@@ -1,0 +1,169 @@
+<%- include("partials/header.ejs") %>
+<!-- Top Slider -->
+
+<section id="top-carousel">
+  <div class="container-fluid">
+    <div
+      id="carouselExampleIndicators"
+      class="carousel slide"
+      data-ride="carousel"
+    >
+      <ol class="carousel-indicators">
+        <li
+          data-target="#carouselExampleIndicators"
+          data-slide-to="0"
+          class="active"
+        ></li>
+        <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+      </ol>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="row">
+            <div class="col-md-6">
+              <h1>Get your desired fasionable clothes.</h1>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="row">
+            <div class="col-md-6">
+              <h1>Get your desired fasionable clothes.</h1>
+            </div>
+          </div>
+        </div>
+      </div>
+      <a
+        class="carousel-control-prev"
+        href="#carouselExampleIndicators"
+        role="button"
+        data-slide="prev"
+      >
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a
+        class="carousel-control-next"
+        href="#carouselExampleIndicators"
+        role="button"
+        data-slide="next"
+      >
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Categories -->
+
+<section id="categories">
+  <div class="container-fluid">
+    <div><h1 class="category-h1">Categories</h1></div>
+    <div class="row">
+      <div class="col-md-4 categories-col">
+        <a href="#" class="btn btn-dark btn-lg">T-Shirts</a>
+      </div>
+      <div class="col-md-4 categories-col">
+        <a href="#" class="btn btn-dark btn-lg">Pants</a>
+      </div>
+      <div class="col-md-4 categories-col">
+        <a href="#" class="btn btn-dark btn-lg">Shirts</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Featured-Product -->
+
+<section id="featured-product">
+  <div class="container-fluid">
+    <div><h1 class="featured-h1">Featured Products</h1></div>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+          <img
+            src="/images/home/placeholder.png"
+            class="card-img-top"
+            alt="..."
+          />
+          <div class="card-body">
+            <h5 class="card-title">Product title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </p>
+            <a href="#" class="btn btn-dark">View Details</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+          <img
+            src="/images/home/placeholder.png"
+            class="card-img-top"
+            alt="..."
+          />
+          <div class="card-body">
+            <h5 class="card-title">Product title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </p>
+            <a href="#" class="btn btn-dark">View Details</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card" style="width: 18rem;">
+          <img
+            src="/images/home/placeholder.png"
+            class="card-img-top"
+            alt="..."
+          />
+          <div class="card-body">
+            <h5 class="card-title">Card title</h5>
+            <p class="card-text">
+              Some quick example text to build on the card title and make up the
+              bulk of the card's content.
+            </p>
+            <a href="#" class="btn btn-dark">View Details</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Newsletter -->
+
+<section id="newsletter">
+  <div class="container-fluid">
+    <div>
+      <h1 class="text-center">Sign Up To Our Newsletter</h1>
+    </div>
+    <form action="" method="post">
+      <div class="form-group newsletter">
+        <input
+          class="form-control my-4"
+          type="text"
+          name="name"
+          placeholder="name"
+        />
+        <input
+          class="form-control my-4"
+          type="email"
+          name="email"
+          id=""
+          placeholder="email"
+        />
+        <div class="newsletter-button">
+          <button class="btn btn-dark mb-4" type="submit">
+            Sign me up
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%- include("partials/footer.ejs") %>
