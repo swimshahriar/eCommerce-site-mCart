@@ -42,7 +42,7 @@ app.post("/", function(req, res) {
     url: "https://us4.api.mailchimp.com/3.0/lists/77cd10437e",
     method: "POST",
     headers: {
-      Authorization: "Shahriar 11dd83ba0fd441b5cdff6dcf8e2b4ff8-us4"
+      Authorization: process.env.MAIL_CHIMP_API
     },
     body: jsonData
   };
