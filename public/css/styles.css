@@ -127,6 +127,25 @@ h1 {
   padding: 7% 16.1%;
 }
 
+/* Register Page */
+
+.container-register {
+  padding: 7% 15%;
+  padding-top: 3%;
+}
+
+/* Login Page */
+
+.container-login {
+  padding: 7% 15%;
+  padding-top: 3%;
+}
+
+/* Account Page */
+.container-account {
+  padding: 7% 15%;
+}
+
 /* Footer */
 
 #footer {
@@ -137,6 +156,7 @@ h1 {
 }
 .footer-h3 {
   color: #eeeeee;
+  font-weight: 700;
 }
 .footer-text {
   color: #393e46;

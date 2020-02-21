@@ -1,0 +1,19 @@
+<%- include("partials/header.ejs") %>
+
+<section id="account">
+  <div class="containder-fluid about-top">
+    <h1>Account(<%= fName %> <%= lName %>)</h1>
+  </div>
+  <div class="container-fluid container-account">
+    <div class="row text-center">
+      <div class="col-md-6">
+        <a class="btn btn-dark btn-lg" href="/orders">Orders</a>
+      </div>
+      <div class="col-md-6">
+        <a class="btn btn-warning btn-lg" href="/logout">Logout</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include("partials/footer.ejs") %>
