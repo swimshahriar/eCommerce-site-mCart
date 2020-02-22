@@ -51,6 +51,14 @@ h1 {
   padding: 7% 16.1%;
   padding-top: 2%;
 }
+.home-carousal-image1 {
+  width: 65%;
+  padding: 2%;
+  transform: rotate(20deg);
+}
+.home-carousal-image2 {
+  width: 70%;
+}
 
 /* Categories Section */
 
@@ -86,6 +94,9 @@ h1 {
 .newsletter-button {
   text-align: center;
 }
+.container-fs {
+  padding: 7% 15%;
+}
 
 /* About Page */
 .about-top {
@@ -115,7 +126,7 @@ h1 {
 }
 .col-md-4 > h5 {
   padding-bottom: 2%;
-  padding-top: 2%;
+  padding-top: 5%;
 }
 
 /* Contact Page */
@@ -144,6 +155,14 @@ h1 {
 /* Account Page */
 .container-account {
   padding: 7% 15%;
+}
+
+/* Admin page */
+.container-admin {
+  padding: 7% 15%;
+}
+.container-admin > .nav-link {
+  background-color: #00adb5;
 }
 
 /* Footer */

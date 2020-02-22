@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
   lName: String,
   username: String,
   address: String,
-  password: String,
+  password: String
 });
 
 // Plugins
@@ -102,11 +102,11 @@ app
 
     request(options, function(error, response, body) {
       if (response.statusCode == 200) {
-        res.send("<h1>You are successfully SUBSCRIBED to our Newsletter!</h1>");
+        res.render("success");
       } else if (error) {
-        res.send("<h1>Failled! :(</h1>");
+        res.render("failed");
       } else {
-        res.send("<h1>Failled! :(</h1>");
+        res.render("failed");
       }
     });
   });
@@ -164,7 +164,8 @@ app
     }
   })
   .post(function(req, res) {
-    if (req.body.password.length >= 6) {
+    const password = req.body.password;
+    if (password.length >= 6 && password === req.body.reTypePass) {
       User.register(
         {
           fName: req.body.fName,
@@ -172,7 +173,7 @@ app
           username: req.body.username,
           address: req.body.address
         },
-        req.body.password,
+        password,
         function(err, user) {
           if (err) {
             res.redirect("/register");
@@ -193,7 +194,11 @@ app
   .route("/login")
   .get(function(req, res) {
     if (req.isAuthenticated()) {
-      res.redirect("/account");
+      if (req.user.username === "admin@admin.com") {
+        res.redirect("/admin");
+      } else {
+        res.redirect("/account");
+      }
     } else {
       res.render("login");
     }
@@ -210,7 +215,11 @@ app
         res.redirect("/login");
       } else {
         passport.authenticate("local")(req, res, function() {
-          res.redirect("/account");
+          if (req.user.username === "admin@admin.com") {
+            res.redirect("/admin");
+          } else {
+            res.redirect("/account");
+          }
         });
       }
     });
@@ -229,6 +238,15 @@ app.route("/account").get(function(req, res) {
 app.route("/logout").get(function(req, res) {
   req.logout();
   res.redirect("/login");
+});
+
+// Admin Route
+app.route("/admin").get(function(req, res) {
+  if (req.isAuthenticated() && req.user.username === "admin@admin.com") {
+    res.render("admin");
+  } else {
+    res.redirect("/login");
+  }
 });
 
 //server port
