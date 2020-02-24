@@ -1,5 +1,82 @@
-<%- include("partials/header.ejs") %> 
+<%- include("partials/header.ejs") %>
 
-
+<section id="t-shirt">
+  <div class="container-fluid about-top">
+    <h1>T-Shirts</h1>
+  </div>
+  <div class="container-fluid container-t-shirt">
+    <div class="row">
+      <div class="col-md-3 py-3">
+        <div>
+          <h5 class="mb-3">Filter by Price</h5>
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <input class="my-auto mx-2" type="checkbox" name="" id="" />
+          </div>
+          <p class="my-auto">0 - 250 TK</p>
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <input class="my-auto mx-2" type="checkbox" name="" id="" />
+          </div>
+          <p class="my-auto">250 - 500 TK</p>
+        </div>
+        <div class="input-group mb-2">
+          <div class="input-group-prepend">
+            <input class="my-auto mx-2" type="checkbox" name="" id="" />
+          </div>
+          <p class="my-auto">500 - 750 TK</p>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="row bg-light border-circle py-3 mb-3">
+          <div class="col-md-3">
+            <div class="my-auto">
+              <img src="images/home/white.png" alt="" width="100%" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div>
+              <h4>Title</h4>
+            </div>
+            <div>
+              <p>Description</p>
+            </div>
+            <div>
+              <p>Price: 0 TK</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center">
+              <button class="btn btn-dark">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+        <div class="row bg-light border-circle py-3 mb-3">
+          <div class="col-md-3">
+            <div class="">
+              <img src="images/home/white.png" alt="" width="100%" />
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div>
+              <h4>Title</h4>
+            </div>
+            <div>
+              <p>Description</p>
+            </div>
+            <div>
+              <p>Price: 0 TK</p>
+            </div>
+            <div>
+              <button class="btn btn-dark">Add to Cart</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
 <%- include("partials/footer.ejs") %>

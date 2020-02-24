@@ -4,7 +4,7 @@ body {
 h1 {
   font-family: "Montserrat", sans-serif;
   font-weight: 900;
-  font-size: 3.5rem;
+  font-size: 3rem;
   line-height: 1.5;
 }
 
@@ -31,7 +31,7 @@ h1 {
   font-size: 2.5rem;
 }
 .nav-item {
-  padding: 0 18px;
+  padding: 0 2%;
 }
 .navbar-link {
   font-family: "Montserrat", sans-serif;
@@ -74,6 +74,9 @@ h1 {
   color: #393e46;
   padding-bottom: 5%;
 }
+.cat-btn {
+  margin: 2%;
+}
 
 /* Featured product */
 #featured-product {
@@ -84,6 +87,9 @@ h1 {
   text-align: center;
   color: #eeeeee;
   padding-bottom: 5%;
+}
+.cat-card {
+  margin: 2%;
 }
 
 /* Newsletter */
@@ -165,6 +171,13 @@ h1 {
   background-color: #00adb5;
 }
 
+/* Category page */
+/* T-Shirts Page */
+
+.container-t-shirt {
+  padding: 5% 15% 7% 15%;
+}
+
 /* Footer */
 
 #footer {
@@ -202,4 +215,36 @@ h1 {
 }
 .copyright-link:hover {
   color: #393e46;
+}
+
+
+/* Media Query */
+
+/* Home page */
+
+@media (max-width: 1110px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+}
+@media (max-width: 767px) {
+  h1 {
+    text-align: center;
+  }
+  .home-carousal-image1 {
+    width: 50%;
+  }
+  .home-carousal-image2 {
+    width: 60%;
+  }
+
+  /* About Page */
+  .avatar {
+    width: 40%;
+  }
+}
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2rem;
+  }
 }
