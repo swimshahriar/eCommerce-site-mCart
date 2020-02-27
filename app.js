@@ -10,6 +10,7 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
+const _ = require("lodash");
 
 const app = express();
 
@@ -49,6 +50,14 @@ const userSchema = new mongoose.Schema({
   password: String
 });
 
+const productSchema = new mongoose.Schema({
+  name: String,
+  imageUrl: String,
+  category: String,
+  price: Number,
+  description: String
+});
+
 // Plugins
 
 userSchema.plugin(passportLocalMongoose);
@@ -56,6 +65,7 @@ userSchema.plugin(passportLocalMongoose);
 // Mongoose Models
 
 const User = new mongoose.model("User", userSchema);
+const Product = new mongoose.model("Product", productSchema);
 
 // passport strategy
 
@@ -127,31 +137,69 @@ app
     res.render("contact");
   });
 
+// Add Product
+app.route("/add").post(function(req, res) {
+  const product = new Product({
+    name: req.body.name,
+    imageUrl: req.body.imageUrl,
+    category: req.body.category,
+    price: req.body.price,
+    description: req.body.description
+  });
+
+  product.save(function(err) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.redirect("/admin");
+    }
+  });
+});
+
+// Delete product
+app.route("/delete").post(function(req, res) {
+  const productName = req.body.name;
+
+  Product.deleteOne({ name: productName }, function(err) {
+    if (!err) {
+      res.redirect("/admin");
+    } else {
+      console.log(err);
+    }
+  });
+});
+
 // Category Routes
 
-// T-Shirts
-app
-  .route("/t-shirts")
-
-  .get(function(req, res) {
-    res.render("t-shirts");
+app.route("/category/:categoryRoute").get(function(req, res) {
+  const categoryRoute = req.params.categoryRoute;
+  Product.find({ category: categoryRoute }, function(err, products) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("category", {
+        category: _.upperFirst(categoryRoute),
+        products: products
+      });
+    }
   });
+});
+// .post(function(req, res) {
 
-// Shirts
-app
-  .route("/shirts")
+//   console.log(option);
+//   if (option1) {
+//     Product.find({price: {$lt: 500}, category: req.body.option1}, function(err, result) {
+//       if(err) {
+//         console.log(err);
+//       } else {
+//         res.redirect("/category/" + req.body.option1 + "")
+//       }
+//     });
+//   } else {
 
-  .get(function(req, res) {
-    res.render("shirts");
-  });
+//   }
 
-// Pants
-app
-  .route("/pants")
-
-  .get(function(req, res) {
-    res.render("pants");
-  });
+// });
 
 // Register Route
 app

@@ -1,0 +1,97 @@
+<%- include("partials/header.ejs") %>
+
+<section id="category">
+  <div class="container-fluid about-top">
+    <h1><%= category %>s</h1>
+  </div>
+  <div class="container-fluid container-t-shirt">
+    <div class="row">
+      <!-- Filter Part -->
+      <div class="col-md-3 py-3">
+        <div>
+          <h5 class="mb-3">Filter by Price</h5>
+        </div>
+        <form action="" method="post">
+            <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <input
+                    class="my-auto mx-2"
+                    type="checkbox"
+                    name="option"
+                    value="1"
+                    value="<%= category %> "
+                    id=""
+                    onchange="this.form.submit()"
+                  />
+                </div>
+                <p class="my-auto">0 - 499 TK</p>
+              </div>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <input
+                    class="my-auto mx-2"
+                    type="checkbox"
+                    name="option"
+                    value="2"
+                    id=""
+                    onchange="this.form.submit()"
+                  />
+                </div>
+                <p class="my-auto">500 - 1000 TK</p>
+              </div>
+              <div class="input-group mb-2">
+                <div class="input-group-prepend">
+                  <input
+                    class="my-auto mx-2"
+                    type="checkbox"
+                    name="option"
+                    value="3"
+                    id=""
+                    onchange="this.form.submit()"
+                  />
+                </div>
+                <p class="my-auto">> 1000 TK</p>
+              </div>
+              <!-- <div class="pl-2 pt-2">
+                <button class="btn btn-dark" type="submit">Search</button>
+              </div> -->
+            </div>
+        </form>
+        
+      <div class="col-md-9">
+        <!-- Products Part -->
+
+        <!-- Loop -->
+        <% products.forEach(function(product) { %>
+        <div class="row bg-light border-circle py-3 mb-3">
+          <div class="col-md-3">
+            <div class="my-auto pb-3">
+              <img src="<%= product.imageUrl %> " alt="" width="100%" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div>
+              <h4><%= product.name %></h4>
+            </div>
+            <div>
+              <p>Description: <%= product.description %></p>
+            </div>
+
+            <div>
+              <p>Price: <%= product.price %> TK</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center py-5">
+              <button class="btn btn-dark">Details</button>
+            </div>
+          </div>
+        </div>
+
+        <% }); %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include("partials/footer.ejs") %>
