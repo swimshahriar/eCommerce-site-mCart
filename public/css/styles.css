@@ -1,3 +1,4 @@
+/* Global */
 body {
   font-family: "Montserrat", sans-serif;
 }
@@ -176,6 +177,12 @@ h1 {
 
 .container-t-shirt {
   padding: 5% 15% 7% 15%;
+}
+
+/* Product Page */
+.reviewers {
+  background-color: #eeeeee;
+  padding: 2%;
 }
 
 /* Footer */

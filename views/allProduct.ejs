@@ -1,0 +1,66 @@
+<%- include("partials/header.ejs") %>
+
+<section id="allProduct">
+  <div class="container-fluid about-top">
+    <h1>All Products</h1>
+  </div>
+  <div class="container-fluid container-t-shirt">
+    <div class="row">
+      <!-- Filter Part -->
+      <div class="col-md-3 py-3">
+        <div>
+          <h3 class="mb-3 font-weight-bold">Categories</h3>
+        </div>
+        <div class="my-2">
+            <a class="btn btn-dark" href="/category/t-shirt">T-Shirt</a>
+        </div>
+        <div class="my-2">
+            <a class="btn btn-dark" href="/category/shirt">Shirt</a>
+        </div>
+        <div class="my-2">
+            <a class="btn btn-dark" href="/category/pant">Pant</a>
+        </div>
+      </div>
+
+      <div class="col-md-9">
+        <!-- Products Part -->
+
+        <!-- Loop -->
+        <% products.forEach(function(product) { %>
+        <div class="row bg-light border-circle py-3 mb-3">
+          <div class="col-md-3">
+            <div class="my-auto pb-3">
+              <img src="<%= product.imageUrl %> " alt="" width="100%" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div>
+              <h4><%= product.name %></h4>
+            </div>
+            <div>
+              <p>Description: <%= product.description %></p>
+            </div>
+
+            <div>
+              <p>Price: <%= product.price %> TK</p>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="text-center py-5">
+              <a
+                href="/category/<%= product.category %>/<%= product.name %>  "
+                type="submit"
+                class="btn btn-dark"
+                >Details</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <% }); %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include("partials/footer.ejs") %>

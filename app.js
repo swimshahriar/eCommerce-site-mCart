@@ -35,7 +35,8 @@ app.use(passport.session());
 
 mongoose.connect(process.env.MONGODB_ATLAS, {
   useNewUrlParser: true,
-  useUnifiedTopology: true
+  useUnifiedTopology: true,
+  useFindAndModify: false
 });
 
 mongoose.set("useCreateIndex", true);
@@ -55,7 +56,17 @@ const productSchema = new mongoose.Schema({
   imageUrl: String,
   category: String,
   price: Number,
-  description: String
+  description: String,
+  featured: {
+    default: false
+  },
+  rating: [
+    {
+      userName: String,
+      score: Number,
+      comment: String
+    }
+  ]
 });
 
 // Plugins
@@ -78,7 +89,13 @@ passport.deserializeUser(User.deserializeUser());
 app
   .route("/")
   .get(function(req, res) {
-    res.render("home");
+    Product.find({ featured: "true" }, function(err, products) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.render("home", { products: products });
+      }
+    });
   })
 
   .post(function(req, res) {
@@ -137,6 +154,7 @@ app
     res.render("contact");
   });
 
+// Admin Dashboard
 // Add Product
 app.route("/add").post(function(req, res) {
   const product = new Product({
@@ -169,6 +187,43 @@ app.route("/delete").post(function(req, res) {
   });
 });
 
+// Featured Products
+app.route("/featured-products").post(function(req, res) {
+  const featuredProduct = req.body.featuredProduct;
+  const operation = req.body.operation;
+
+  if (operation === "add") {
+    Product.updateOne({ name: featuredProduct }, { featured: "true" }, function(
+      err,
+      product
+    ) {
+      res.redirect("admin");
+    });
+  } else {
+    Product.updateOne(
+      { name: featuredProduct },
+      { featured: "false" },
+      function(err, product) {
+        res.redirect("admin");
+      }
+    );
+  }
+});
+
+// All Products Route
+app.route("/products").get(function(req, res) {
+  Product.find(function(err, products) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("allProduct", {
+        category: products.category,
+        products: products
+      });
+    }
+  });
+});
+
 // Category Routes
 
 app.route("/category/:categoryRoute").get(function(req, res) {
@@ -184,22 +239,57 @@ app.route("/category/:categoryRoute").get(function(req, res) {
     }
   });
 });
-// .post(function(req, res) {
 
-//   console.log(option);
-//   if (option1) {
-//     Product.find({price: {$lt: 500}, category: req.body.option1}, function(err, result) {
-//       if(err) {
-//         console.log(err);
-//       } else {
-//         res.redirect("/category/" + req.body.option1 + "")
-//       }
-//     });
-//   } else {
+// Products Page
+app.route("/category/:categoryName/:productName").get(function(req, res) {
+  const categoryName = req.params.categoryName;
+  const productName = req.params.productName;
 
-//   }
+  Product.findOne({ name: productName }, function(err, product) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("product", {
+        imageUrl: product.imageUrl,
+        name: product.name,
+        description: product.description,
+        price: product.price
+      });
+    }
+  });
+});
 
-// });
+// Review Route
+app.route("/review").post(function(req, res) {
+  const score = req.body.score;
+  const comment = req.body.comment;
+
+  if (req.isAuthenticated()) {
+    const review = {
+      userName: req.user.fName,
+      score: score,
+      comment: comment
+    };
+    console.log(review, req.body.productName);
+    Product.updateOne(
+      { name: req.body.productName },
+      {
+        $push: {
+          rating: review
+        }
+      },
+      function(err, done) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.redirect("/products");
+        }
+      }
+    );
+  } else {
+    res.redirect("/login");
+  }
+});
 
 // Register Route
 app
@@ -227,7 +317,7 @@ app
             res.redirect("/register");
           } else {
             passport.authenticate("local")(req, res, function() {
-              res.redirect("/account");
+              res.redirect("/products");
             });
           }
         }
@@ -245,7 +335,7 @@ app
       if (req.user.username === "admin@admin.com") {
         res.redirect("/admin");
       } else {
-        res.redirect("/account");
+        res.redirect("/products");
       }
     } else {
       res.render("login");
@@ -266,7 +356,7 @@ app
           if (req.user.username === "admin@admin.com") {
             res.redirect("/admin");
           } else {
-            res.redirect("/account");
+            res.redirect("/products");
           }
         });
       }
