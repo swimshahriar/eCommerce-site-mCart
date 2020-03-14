@@ -11,57 +11,39 @@
         <div>
           <h5 class="mb-3 font-weight-bold">Filter by Price</h5>
         </div>
-        <form action="" method="post"></form>
-            <div class="input-group mb-2">
-                <div class="input-group-prepend">
-                  <input
-                    class="my-auto mx-2"
-                    type="checkbox"
-                    name="option"
-                    value="1"
-                    value="<%= category %>"
-                    id=""
-                    onchange="this.form.submit()"
-                  />
-                </div>
-                <p class="my-auto">0 - 499 TK</p>
-              </div>
-            </form>
-            <form action="" method="post">
-              <div class="input-group mb-2">
-                <div class="input-group-prepend">
-                  <input
-                    class="my-auto mx-2"
-                    type="checkbox"
-                    name="option"
-                    value="2"
-                    id=""
-                    onchange="this.form.submit()"
-                  />
-                </div>
-                <p class="my-auto">500 - 1000 TK</p>
-              </div>
-            </form>
-              <form action="" method="post">
-                <div class="input-group mb-2">
-                  <div class="input-group-prepend">
-                    <input
-                      class="my-auto mx-2"
-                      type="checkbox"
-                      name="option"
-                      value="3"
-                      id=""
-                      onchange="this.form.submit()"
-                    />
-                  </div>
-                  <p class="my-auto">> 1000 TK</p>
-                </div>
-              </form>
-              
-              
-            </div>
-        
-        
+        <div>
+          <a class="filter-by-price" href="/category/<%= category %>/price/0/500">0 - 499 TK</a>
+        </div>
+        <div>
+          <a class="filter-by-price" href="/category/<%= category %>/price/500/1000">500 - 999 TK</a>
+        </div>
+        <div>
+          <a class="filter-by-price" href="/category/<%= category %>/price/1000/5000">1000 - 5000 TK</a>
+        </div>
+        <div>
+          <a class="filter-by-price" href="/category/<%= category %>">Reset</a>
+        </div>
+
+        <!-- Filter by category -->
+        <div class="py-3">
+          <div>
+            <h5 class="mb-3 font-weight-bold">Filter by category</h5>
+          </div>
+          <div class="my-2">
+            <a class="btn btn-dark" href="/products">All Products</a>
+          </div>
+          <div class="my-2">
+            <a class="btn btn-dark" href="/category/t-shirt">T-Shirt</a>
+          </div>
+          <div class="my-2">
+            <a class="btn btn-dark" href="/category/shirt">Shirt</a>
+          </div>
+          <div class="my-2">
+            <a class="btn btn-dark" href="/category/pant">Pant</a>
+          </div>
+        </div>
+      </div>
+
       <div class="col-md-9">
         <!-- Products Part -->
 
@@ -87,9 +69,12 @@
           </div>
           <div class="col-md-3">
             <div class="text-center py-5">
-              
-                <a href="/category/<%= product.category %>/<%= product.name %>  " type="submit" class="btn btn-dark" >Details</a>
-              
+              <a
+                href="/category/<%= product.category %>/<%= product.name %>  "
+                type="submit"
+                class="btn btn-dark"
+                >Details</a
+              >
             </div>
           </div>
         </div>

@@ -226,6 +226,23 @@ app.route("/products").get(function(req, res) {
   });
 });
 
+// All products filter route
+app.route("/products/price/:min/:max").get(function(req, res) {
+  const min = req.params.min;
+  const max = req.params.max;
+
+  Product.find({ price: { $gte: min, $lt: max } }, function(err, products) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render("allProduct", {
+        category: products.category,
+        products: products
+      });
+    }
+  });
+});
+
 // Category Routes
 
 app.route("/category/:categoryRoute").get(function(req, res) {
@@ -244,9 +261,26 @@ app.route("/category/:categoryRoute").get(function(req, res) {
 
 // Filter Route
 app
-  .route("/category/:categoryRoute/price?min=:min?max=:max")
+  .route("/category/:categoryRoute/price/:min/:max")
   .get(function(req, res) {
-    
+    const categoryRoute = _.lowerFirst(req.params.categoryRoute);
+    const min = req.params.min;
+    const max = req.params.max;
+    console.log(categoryRoute);
+
+    Product.find(
+      { category: categoryRoute, price: { $gte: min, $lt: max } },
+      function(err, products) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.render("category", {
+            category: _.upperFirst(categoryRoute),
+            products: products
+          });
+        }
+      }
+    );
   })
   .post(function(req, res) {});
 

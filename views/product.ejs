@@ -12,11 +12,8 @@
       </div>
       <div class="col-md-6">
         <div>
-          <a
-            href="#lowerTab"
-            style="color: teal;"
-          >
-            <%= rating %>/5 (<%= numOfReviewer %> Reviewers )
+          <a href="#lowerTab" style="color: teal;">
+            <%= rating %>/5 (<%= numOfReviewer %> Reviews )
           </a>
           <h5 class="font-weight-bold">Name:</h5>
           <p>
@@ -156,7 +153,14 @@
           aria-labelledby="nav-reviews-tab"
         >
           <div class="mt-3">
-            <h3 class="font-weight-bold">Review this product:</h3>
+            <h3 class="font-weight-bold" aria-describedby="reviewNote">
+              Review this product:
+            </h3>
+            <small id="reviewNote" class="form-text text-muted">
+              <p class="m-0" style="color: red;">
+                **Only for logged in users.
+              </p>
+            </small>
             <form action="/review" method="post">
               <div class="form-group">
                 <input
@@ -168,11 +172,11 @@
                 />
                 <label for="score">Score:</label>
                 <select class="form-control" name="score" id="">
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
                   <option value="5">5</option>
+                  <option value="4">4</option>
+                  <option value="3">3</option>
+                  <option value="2">2</option>
+                  <option value="1">1</option>
                 </select>
                 <label class="mt-2" for="comment">Comment:</label>
                 <textarea
@@ -194,7 +198,7 @@
               Reviews:
             </h3>
             <p style="color: teal;">
-              <%= rating %>/5 (<%= numOfReviewer %> Reviewers )
+              <%= rating %>/5 (<%= numOfReviewer %> Reviews )
             </p>
             <% reviewer.forEach(function(review) { %>
             <div class="reviewers mb-3">

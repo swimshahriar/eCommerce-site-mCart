@@ -185,6 +185,14 @@ h1 {
   padding: 2%;
 }
 
+/* Filter-by-price */
+.filter-by-price {
+  color: #00adb5;
+}
+.filter-by-price:hover {
+  color: #393e46;
+}
+
 /* Footer */
 
 #footer {
