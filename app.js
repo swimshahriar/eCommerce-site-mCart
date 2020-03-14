@@ -59,14 +59,15 @@ const productSchema = new mongoose.Schema({
   description: String,
   featured: {
     default: false
-  },
-  rating: [
-    {
-      userName: String,
-      score: Number,
-      comment: String
-    }
-  ]
+  }
+});
+
+const reviewSchema = new mongoose.Schema({
+  userName: String,
+  productName: String,
+  score: Number,
+  comment: String,
+  date: Date
 });
 
 // Plugins
@@ -77,6 +78,7 @@ userSchema.plugin(passportLocalMongoose);
 
 const User = new mongoose.model("User", userSchema);
 const Product = new mongoose.model("Product", productSchema);
+const Review = new mongoose.model("Review", reviewSchema);
 
 // passport strategy
 
@@ -240,6 +242,14 @@ app.route("/category/:categoryRoute").get(function(req, res) {
   });
 });
 
+// Filter Route
+app
+  .route("/category/:categoryRoute/price?min=:min?max=:max")
+  .get(function(req, res) {
+    
+  })
+  .post(function(req, res) {});
+
 // Products Page
 app.route("/category/:categoryName/:productName").get(function(req, res) {
   const categoryName = req.params.categoryName;
@@ -249,11 +259,53 @@ app.route("/category/:categoryName/:productName").get(function(req, res) {
     if (err) {
       console.log(err);
     } else {
-      res.render("product", {
-        imageUrl: product.imageUrl,
-        name: product.name,
-        description: product.description,
-        price: product.price
+      Review.find({ productName: product.name }, function(err, review) {
+        if (err) {
+          console.log(err);
+        } else {
+          Review.aggregate(
+            [
+              {
+                $match: { productName: product.name }
+              },
+              {
+                $group: {
+                  _id: null,
+                  count: { $sum: 1 },
+                  total: { $sum: "$score" }
+                }
+              }
+            ],
+            function(err, found) {
+              if (!err) {
+                console.log(found[0]);
+                if (found[0] != undefined) {
+                  res.render("product", {
+                    imageUrl: product.imageUrl,
+                    name: product.name,
+                    description: product.description,
+                    price: product.price,
+                    reviewer: review,
+                    rating: found[0].total / found[0].count,
+                    numOfReviewer: found[0].count
+                  });
+                } else {
+                  res.render("product", {
+                    imageUrl: product.imageUrl,
+                    name: product.name,
+                    description: product.description,
+                    price: product.price,
+                    reviewer: review,
+                    rating: 0,
+                    numOfReviewer: 0
+                  });
+                }
+              } else {
+                console.log(err);
+              }
+            }
+          );
+        }
       });
     }
   });
@@ -265,27 +317,22 @@ app.route("/review").post(function(req, res) {
   const comment = req.body.comment;
 
   if (req.isAuthenticated()) {
-    const review = {
+    const review = new Review({
       userName: req.user.fName,
+      productName: req.body.productName,
       score: score,
-      comment: comment
-    };
+      comment: comment,
+      date: new Date()
+    });
+
     console.log(review, req.body.productName);
-    Product.updateOne(
-      { name: req.body.productName },
-      {
-        $push: {
-          rating: review
-        }
-      },
-      function(err, done) {
-        if (err) {
-          console.log(err);
-        } else {
-          res.redirect("/products");
-        }
+    review.save(function(err) {
+      if (err) {
+        console.log(err);
+      } else {
+        res.redirect("/products");
       }
-    );
+    });
   } else {
     res.redirect("/login");
   }

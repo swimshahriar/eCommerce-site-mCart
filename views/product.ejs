@@ -12,8 +12,16 @@
       </div>
       <div class="col-md-6">
         <div>
+          <a
+            href="#lowerTab"
+            style="color: teal;"
+          >
+            <%= rating %>/5 (<%= numOfReviewer %> Reviewers )
+          </a>
           <h5 class="font-weight-bold">Name:</h5>
-          <p><%= name %></p>
+          <p>
+            <%= name %>
+          </p>
         </div>
         <div>
           <h5 class="font-weight-bold">Description:</h5>
@@ -81,7 +89,7 @@
       </div>
     </div>
     <!-- Lower Part -->
-    <div class="my-5">
+    <div id="lowerTab" class="my-5">
       <nav>
         <div class="nav nav-tabs" id="nav-tab" role="tablist">
           <a
@@ -155,7 +163,7 @@
                   type="text"
                   name="productName"
                   id=""
-                  value="<%= name %> "
+                  value="<%= name %>"
                   hidden
                 />
                 <label for="score">Score:</label>
@@ -175,24 +183,28 @@
                 ></textarea>
               </div>
               <div class="text-center">
-                <button
-                  class="btn btn-dark"
-                  type="submit"
-                  
-                >
+                <button class="btn btn-dark" type="submit">
                   Submit
                 </button>
               </div>
             </form>
           </div>
           <div class="mt-3">
-            <h3 class="font-weight-bold">Reviews:</h3>
-            <div class="reviewers">
-              <h5>Name:</h5>
-              <h5>Score:</h5>
-              <h5>Comment:</h5>
+            <h3 class="font-weight-bold">
+              Reviews:
+            </h3>
+            <p style="color: teal;">
+              <%= rating %>/5 (<%= numOfReviewer %> Reviewers )
+            </p>
+            <% reviewer.forEach(function(review) { %>
+            <div class="reviewers mb-3">
+              <h5>Name: <%= review.userName %></h5>
+              <h5>Score: <%= review.score %>/5</h5>
+              <h5>Comment: "<%= review.comment %>"</h5>
             </div>
           </div>
+
+          <% }); %>
         </div>
       </div>
     </div>

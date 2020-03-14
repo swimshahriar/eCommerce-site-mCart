@@ -9,9 +9,9 @@
       <!-- Filter Part -->
       <div class="col-md-3 py-3">
         <div>
-          <h5 class="mb-3">Filter by Price</h5>
+          <h5 class="mb-3 font-weight-bold">Filter by Price</h5>
         </div>
-        <form action="" method="post">
+        <form action="" method="post"></form>
             <div class="input-group mb-2">
                 <div class="input-group-prepend">
                   <input
@@ -19,13 +19,15 @@
                     type="checkbox"
                     name="option"
                     value="1"
-                    value="<%= category %> "
+                    value="<%= category %>"
                     id=""
                     onchange="this.form.submit()"
                   />
                 </div>
                 <p class="my-auto">0 - 499 TK</p>
               </div>
+            </form>
+            <form action="" method="post">
               <div class="input-group mb-2">
                 <div class="input-group-prepend">
                   <input
@@ -39,24 +41,26 @@
                 </div>
                 <p class="my-auto">500 - 1000 TK</p>
               </div>
-              <div class="input-group mb-2">
-                <div class="input-group-prepend">
-                  <input
-                    class="my-auto mx-2"
-                    type="checkbox"
-                    name="option"
-                    value="3"
-                    id=""
-                    onchange="this.form.submit()"
-                  />
+            </form>
+              <form action="" method="post">
+                <div class="input-group mb-2">
+                  <div class="input-group-prepend">
+                    <input
+                      class="my-auto mx-2"
+                      type="checkbox"
+                      name="option"
+                      value="3"
+                      id=""
+                      onchange="this.form.submit()"
+                    />
+                  </div>
+                  <p class="my-auto">> 1000 TK</p>
                 </div>
-                <p class="my-auto">> 1000 TK</p>
-              </div>
-              <!-- <div class="pl-2 pt-2">
-                <button class="btn btn-dark" type="submit">Search</button>
-              </div> -->
+              </form>
+              
+              
             </div>
-        </form>
+        
         
       <div class="col-md-9">
         <!-- Products Part -->
