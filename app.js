@@ -247,12 +247,14 @@ app.route("/products/price/:min/:max").get(function(req, res) {
 
 app.route("/category/:categoryRoute").get(function(req, res) {
   const categoryRoute = req.params.categoryRoute;
+  const categoryLower = _.lowerFirst(categoryRoute);
   Product.find({ category: categoryRoute }, function(err, products) {
     if (err) {
       console.log(err);
     } else {
       res.render("category", {
         category: _.upperFirst(categoryRoute),
+        categoryLower: categoryLower,
         products: products
       });
     }
@@ -276,6 +278,7 @@ app
         } else {
           res.render("category", {
             category: _.upperFirst(categoryRoute),
+            categoryLower: categoryRoute,
             products: products
           });
         }
@@ -466,6 +469,11 @@ app.route("/admin").get(function(req, res) {
   } else {
     res.redirect("/login");
   }
+});
+
+// Cart Route
+app.route("/cart").get(function(req, res) {
+  res.render("cart");
 });
 
 //server port
