@@ -255,6 +255,12 @@ h1 {
   color: #393e46;
 }
 
+/* Cart Section */
+.cart-section {
+  padding: 5% 16.1% 5% 16.1%;
+}
+
+
 /* Media Query */
 
 /* Home page */

@@ -21,6 +21,9 @@
       integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh"
       crossorigin="anonymous"
     />
+
+    <!-- Bootswatch css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <!-- public local css -->
     <link rel="stylesheet" href="/css/styles.css" />
     <!-- Google Fonts -->
@@ -28,11 +31,11 @@
       href="https://fonts.googleapis.com/css?family=Montserrat:300,400,700,900|Ubuntu:700&display=swap"
       rel="stylesheet"
     />
-    <!-- FontAwesome -->
-    <script
-      src="https://kit.fontawesome.com/adf8f4e020.js"
-      crossorigin="anonymous"
-    ></script>
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.8.2/css/all.css"
+    />
     <!-- jQuery cdn -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- Title -->
@@ -92,10 +95,15 @@
                 </a>
               </li>
               <li class="nav-item">
+                <!-- Cart Button -->
                 <a class="nav-link userCart" href="/cart"
                   ><i class="fas fa-shopping-cart"></i>
-                  <span class="badge badge-light"
-                    ><%= session.cart.totalItems || 0 %>
+                  <span class="badge badge-light">
+                    <% if(session.cart != null) { %> 
+                    <%= session.cart.totalItems %> 
+                    <% } else { %> 
+                      <%= 0 %> 
+                      <% } %>
                   </span>
                 </a>
               </li>

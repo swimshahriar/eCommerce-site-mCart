@@ -1,8 +1,59 @@
 <%- include("partials/header.ejs") %> 
 
 <section id="cart-section">
-  <div class="container-fluid">
-    
+  <div class="container-fluid about-top">
+    <h1>Your Cart</h1>
+  </div>
+  <div class="container-fluid cart-section">
+    <% if (products) { %>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Product name</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% var i = 1;%>
+        <% products.forEach(function(product) { %>
+          
+          <tr>
+            <th scope="row"> 
+              <%= i %> 
+              <% i = i + 1; %> 
+          </th>
+            <td><%= product.item.name %></td>
+            <th>x <%= product.quantity %></th>
+            <td><%= product.price %> TK</td>
+            <td>
+              <a><i class="fas fa-times"></i></a>
+            </td>
+          </tr>
+          
+          
+        <% }) %> 
+        
+        <tr class="total">
+          <th scope="row"></th>
+          <td>Total</td>
+          <td>x <%= totalItems %></td>
+          <td><%= totalPrice %> TK</td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <% } else { %> 
+      <h4>No products added yet!</h4>
+      <% } %>
+      <div class="text-center">
+        <a href="#" class="btn btn-success">Checkout</a>
+      </div>
+      
+  </div>
+  
   </div>
 </section>
 

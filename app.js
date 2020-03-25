@@ -430,7 +430,7 @@ app
       if (req.user.username === "admin@admin.com") {
         res.redirect("/admin");
       } else {
-        res.redirect("/products");
+        res.redirect("/account");
       }
     } else {
       res.render("login");
@@ -494,7 +494,7 @@ function Cart(oldCart) {
     if (!cartItem) {
       cartItem = this.items[name] = { item: item, quantity: 0, price: 0 };
     }
-    cartItem.quantity ++;
+    cartItem.quantity++;
     cartItem.price = cartItem.item.price * cartItem.quantity;
     this.totalItems++;
     this.totalPrice += cartItem.item.price;
@@ -520,9 +520,24 @@ app.route("/add-to-cart/:name").get(function(req, res) {
       cart.add(product, product.name);
       req.session.cart = cart;
       console.log(req.session.cart);
-      res.redirect("/products");
+      res.redirect("/cart");
     }
   });
+});
+
+// Cart Modal Route
+app.route("/cart").get(function(req, res) {
+  if (!req.session.cart) {
+    res.render("cart", { products: null });
+  } else {
+    const cart = new Cart(req.session.cart);
+
+    res.render("cart", {
+      products: cart.generateArray(),
+      totalPrice: cart.totalPrice,
+      totalItems: cart.totalItems
+    });
+  }
 });
 
 //server port
