@@ -88,13 +88,16 @@
               </li>
               <li class="nav-item">
                 <a class="nav-link userCart" href="/login"
-                  ><i class="fas fa-user"></i
-                ></a>
+                  ><i class="fas fa-user"></i>
+                </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link userCart" href="/cart"
-                  ><i class="fas fa-shopping-cart"></i
-                ></a>
+                  ><i class="fas fa-shopping-cart"></i>
+                  <span class="badge badge-light"
+                    ><%= session.cart.totalItems %>
+                  </span>
+                </a>
               </li>
             </ul>
           </div>

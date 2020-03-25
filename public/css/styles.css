@@ -17,6 +17,29 @@ h1 {
   padding: 0% 15% 0%;
 }
 
+/* Scroll Bar */
+/* Width */
+::-webkit-scrollbar {
+  width: 15px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px grey;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: #00adb5;
+  border: 2px solid white;
+  border-radius: 10px;
+}
+
+/* Handle On Hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #393e46;
+}
+
 /* Home Page */
 
 /* Top Section */
@@ -231,7 +254,6 @@ h1 {
 .copyright-link:hover {
   color: #393e46;
 }
-
 
 /* Media Query */
 

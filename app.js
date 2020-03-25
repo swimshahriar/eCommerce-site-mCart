@@ -11,6 +11,7 @@ const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const _ = require("lodash");
+const MongoStore = require("connect-mongo")(session);
 
 const app = express();
 
@@ -24,12 +25,22 @@ app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    store: new MongoStore({
+      mongooseConnection: mongoose.connection,
+      ttl: 180 * 60 * 1000
+    })
   })
 );
 
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(function(req, res, next) {
+  res.locals.login = req.isAuthenticated();
+  res.locals.session = req.session;
+  next();
+});
 
 // Database Connect
 
@@ -471,9 +482,47 @@ app.route("/admin").get(function(req, res) {
   }
 });
 
+// Cart Function
+function Cart(oldCart) {
+  this.items = oldCart.items || {};
+  this.quantity = oldCart.quantity || 0;
+  this.totalItems = oldCart.totalItems || 0;
+  this.totalPrice = oldCart.totalPrice || 0;
+
+  this.add = function(item, name) {
+    let cartItem = this.items[name];
+    if (!cartItem) {
+      cartItem = this.items[name] = { item: item, quantity: 0, price: 0 };
+    }
+    cartItem.quantity ++;
+    cartItem.price = cartItem.item.price * cartItem.quantity;
+    this.totalItems++;
+    this.totalPrice += cartItem.item.price;
+  };
+  this.generateArray = function() {
+    const arr = [];
+    for (var name in this.items) {
+      arr.push(this.items[name]);
+    }
+    return arr;
+  };
+}
+
 // Cart Route
-app.route("/cart").get(function(req, res) {
-  res.render("cart");
+app.route("/add-to-cart/:name").get(function(req, res) {
+  const name = req.params.name;
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+
+  Product.findOne({ name: name }, function(err, product) {
+    if (err) {
+      console.log(err);
+    } else {
+      cart.add(product, product.name);
+      req.session.cart = cart;
+      console.log(req.session.cart);
+      res.redirect("/products");
+    }
+  });
 });
 
 //server port
