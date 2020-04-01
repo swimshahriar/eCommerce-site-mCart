@@ -66,6 +66,7 @@ const productSchema = new mongoose.Schema({
   name: String,
   imageUrl: String,
   category: String,
+  size: String,
   price: Number,
   description: String,
   featured: {
@@ -174,6 +175,7 @@ app.route("/add").post(function(req, res) {
     name: req.body.name,
     imageUrl: req.body.imageUrl,
     category: req.body.category,
+    size: req.body.size,
     price: req.body.price,
     description: req.body.description
   });
@@ -332,6 +334,7 @@ app.route("/category/:categoryName/:productName").get(function(req, res) {
                     imageUrl: product.imageUrl,
                     name: product.name,
                     description: product.description,
+                    size: product.size,
                     price: product.price,
                     reviewer: review,
                     rating: found[0].total / found[0].count,
@@ -342,6 +345,7 @@ app.route("/category/:categoryName/:productName").get(function(req, res) {
                     imageUrl: product.imageUrl,
                     name: product.name,
                     description: product.description,
+                    size: product.size,
                     price: product.price,
                     reviewer: review,
                     rating: 0,
@@ -489,10 +493,15 @@ function Cart(oldCart) {
   this.totalItems = oldCart.totalItems || 0;
   this.totalPrice = oldCart.totalPrice || 0;
 
-  this.add = function(item, name) {
+  this.add = function(item, name, size) {
     let cartItem = this.items[name];
     if (!cartItem) {
-      cartItem = this.items[name] = { item: item, quantity: 0, price: 0 };
+      cartItem = this.items[name] = {
+        item: item,
+        quantity: 0,
+        price: 0,
+        size: size
+      };
     }
     cartItem.quantity++;
     cartItem.price = cartItem.item.price * cartItem.quantity;
@@ -517,7 +526,7 @@ app.route("/add-to-cart/:name").get(function(req, res) {
     if (err) {
       console.log(err);
     } else {
-      cart.add(product, product.name);
+      cart.add(product, product.name, product.size);
       req.session.cart = cart;
       console.log(req.session.cart);
       res.redirect("/cart");

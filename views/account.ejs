@@ -5,13 +5,19 @@
     <h1>Account(<%= fName %> <%= lName %>)</h1>
   </div>
   <div class="container-fluid container-account">
-    <div class="row text-center">
-      <div class="col-md-6">
-        <a class="btn btn-dark btn-lg" href="/orders">Orders</a>
+    <div class="row">
+      <div class="col-3">
+        <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+          <a class="nav-link active" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-orders" role="tab" aria-controls="v-pills-orders" aria-selected="true">My Orders</a>
+          <a href="/logout" class="nav-link"  aria-selected="false">Logout</a>  
+        </div>
       </div>
-      <div class="col-md-6">
-        <a class="btn btn-warning btn-lg" href="/logout">Logout</a>
+      <div class="col-9">
+        <div class="tab-content" id="v-pills-tabContent">
+          <div class="tab-pane fade show active" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab">...</div>
+        </div>
       </div>
+    </div>
     </div>
   </div>
 </section>
