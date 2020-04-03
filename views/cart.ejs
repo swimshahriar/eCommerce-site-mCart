@@ -26,10 +26,10 @@
               <% i = i + 1; %> 
           </th>
             <td><%= product.item.name %> (<%= product.size %>)</td>
-            <th>x <%= product.quantity %></th>
+            <th> <a href="/reduce/<%= product.item.name %>" class="btn btn-danger">-</a> <%= product.quantity %> <a href="/increase/<%= product.item.name %>" class="btn btn-success">+</a> </th>
             <td><%= product.price %> TK</td>
             <td>
-              <a><i class="fas fa-times"></i></a>
+              <a href="removeItem/<%= product.item.name %>"><i class="fas fa-times"></i></a>
             </td>
           </tr>
           

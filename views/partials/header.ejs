@@ -99,11 +99,8 @@
                 <a class="nav-link userCart" href="/cart"
                   ><i class="fas fa-shopping-cart"></i>
                   <span class="badge badge-light">
-                    <% if(session.cart != null) { %> 
-                    <%= session.cart.totalItems %> 
-                    <% } else { %> 
-                      <%= 0 %> 
-                      <% } %>
+                    <% if(session.cart != null) { %> <%= session.cart.totalItems
+                    %> <% } else { %> <%= 0 %> <% } %>
                   </span>
                 </a>
               </li>

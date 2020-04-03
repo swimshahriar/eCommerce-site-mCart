@@ -1,4 +1,5 @@
 //jshint esversion:6
+// jshint esversion:8
 
 //required packages
 require("dotenv").config();
@@ -19,7 +20,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
-// Passport session
+// Passport & other sessions
 
 app.use(
   session({
@@ -27,9 +28,9 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({
-      mongooseConnection: mongoose.connection,
-      ttl: 180 * 60 * 1000
-    })
+      mongooseConnection: mongoose.connection
+    }),
+    cookie: { originalMaxAge: 180 * 60 * 1000 }
   })
 );
 
@@ -82,6 +83,21 @@ const reviewSchema = new mongoose.Schema({
   date: Date
 });
 
+const orderSchema = new mongoose.Schema({
+  userId: String,
+  products: [
+    {
+      productName: String,
+      quantity: Number,
+      price: Number
+    }
+  ],
+  address: String,
+  amount: Number,
+  paymentMethod: String,
+  paymentStatus: String
+});
+
 // Plugins
 
 userSchema.plugin(passportLocalMongoose);
@@ -91,6 +107,7 @@ userSchema.plugin(passportLocalMongoose);
 const User = new mongoose.model("User", userSchema);
 const Product = new mongoose.model("Product", productSchema);
 const Review = new mongoose.model("Review", reviewSchema);
+const Order = new mongoose.model("Order", orderSchema);
 
 // passport strategy
 
@@ -508,6 +525,32 @@ function Cart(oldCart) {
     this.totalItems++;
     this.totalPrice += cartItem.item.price;
   };
+
+  this.reduceByOne = function(name) {
+    this.items[name].quantity--;
+    this.items[name].price -= this.items[name].item.price;
+    this.totalItems--;
+    this.totalPrice -= this.items[name].item.price;
+
+    if (this.items[name].quantity <= 0) {
+      delete this.items[name];
+    }
+  };
+
+  this.increaseByOne = function(name) {
+    this.items[name].quantity++;
+    this.items[name].price += this.items[name].item.price;
+    this.totalItems++;
+    this.totalPrice += this.items[name].item.price;
+  };
+
+  this.removeItem = function(name) {
+    this.totalItems -= this.items[name].quantity;
+    this.totalPrice -= this.items[name].price;
+
+    delete this.items[name];
+  };
+
   this.generateArray = function() {
     const arr = [];
     for (var name in this.items) {
@@ -534,6 +577,36 @@ app.route("/add-to-cart/:name").get(function(req, res) {
   });
 });
 
+// IncreaseByOne
+app.route("/increase/:name").get(function(req, res) {
+  const name = req.params.name;
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+
+  cart.increaseByOne(name);
+  req.session.cart = cart;
+  res.redirect("/cart");
+});
+
+// ReduceByOne
+app.route("/reduce/:name").get(function(req, res) {
+  const name = req.params.name;
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+
+  cart.reduceByOne(name);
+  req.session.cart = cart;
+  res.redirect("/cart");
+});
+
+// RemoveItems
+app.route("/removeItem/:name").get(function(req, res) {
+  const name = req.params.name;
+  const cart = new Cart(req.session.cart ? req.session.cart : {});
+
+  cart.removeItem(name);
+  req.session.cart = cart;
+  res.redirect("/cart");
+});
+
 // Cart Modal Route
 app.route("/cart").get(function(req, res) {
   if (!req.session.cart) {
@@ -548,6 +621,44 @@ app.route("/cart").get(function(req, res) {
     });
   }
 });
+
+// Checkout Route
+app
+  .route("/checkout")
+  .get(function(req, res) {
+    if (!req.session.cart) {
+      res.redirect("/cart");
+    } else {
+      const cart = new Cart(req.session.cart);
+
+      res.render("checkout", { total: cart.totalPrice });
+    }
+  })
+  .post(function(req, res) {
+    const cart = new Cart(req.session.cart);
+    const mobileNumber = req.body.mobileNumber;
+    const address = req.body.address;
+    const bkashNumber = req.body.bkashNumber;
+    const bkashTrxID = req.body.bkashTrxID;
+    cart.generateArray().forEach(function(product) {
+      console.log(
+        product.item.name,
+        product.size,
+        product.quantity,
+        product.item.price
+      );
+    });
+    const amount = cart.totalPrice;
+    const paymentMethod = req.body.paymentMethod;
+    console.log(
+      amount,
+      paymentMethod,
+      mobileNumber,
+      address,
+      bkashNumber,
+      bkashTrxID
+    );
+  });
 
 //server port
 let port = process.env.PORT;
