@@ -81,15 +81,15 @@
     <div><h1 class="category-h1">Categories</h1></div>
     <div class="row">
       <div class="col-md-4 categories-col">
-        <a href="/category/t-shirt" class="btn btn-dark btn-lg cat-btn"
+        <a href="/category/t-shirt" class="btn btn-outline-dark btn-lg cat-btn"
           >T-Shirts</a
         >
       </div>
       <div class="col-md-4 categories-col">
-        <a href="/category/pant" class="btn btn-dark btn-lg cat-btn">Pants</a>
+        <a href="/category/pant" class="btn btn-outline-dark btn-lg cat-btn">Pants</a>
       </div>
       <div class="col-md-4 categories-col">
-        <a href="/category/shirt" class="btn btn-dark btn-lg cat-btn">Shirts</a>
+        <a href="/category/shirt" class="btn btn-outline-dark btn-lg cat-btn">Shirts</a>
       </div>
     </div>
   </div>
@@ -114,6 +114,8 @@
             <h5 class="card-title"><%= product.name %></h5>
             <p class="card-text">
               Description: <%= product.description %>
+              <br />
+              Size: <%= product.size %>
               <br />
               Price: <%= product.price %>
             </p>
@@ -155,7 +157,7 @@
           required
         />
         <div class="newsletter-button">
-          <button class="btn btn-dark mb-4" type="submit">
+          <button class="btn btn-outline-dark mb-4" type="submit">
             Sign me up
           </button>
         </div>

@@ -59,7 +59,6 @@ const userSchema = new mongoose.Schema({
   fName: String,
   lName: String,
   username: String,
-  address: String,
   password: String
 });
 
@@ -85,17 +84,20 @@ const reviewSchema = new mongoose.Schema({
 
 const orderSchema = new mongoose.Schema({
   userId: String,
-  products: [
-    {
-      productName: String,
-      quantity: Number,
-      price: Number
-    }
-  ],
+  userName: String,
+  products: [],
   address: String,
   amount: Number,
-  paymentMethod: String,
-  paymentStatus: String
+  paymentMethod: {
+    paymentMethodName: String,
+    bkashNumber: Number,
+    bkashTrxID: String
+  },
+  date: Date,
+  paymentStatus: {
+    type: String,
+    default: "Pending"
+  }
 });
 
 // Plugins
@@ -424,8 +426,7 @@ app
         {
           fName: req.body.fName,
           lName: req.body.lName,
-          username: req.body.username,
-          address: req.body.address
+          username: req.body.username
         },
         password,
         function(err, user) {
@@ -640,25 +641,42 @@ app
     const address = req.body.address;
     const bkashNumber = req.body.bkashNumber;
     const bkashTrxID = req.body.bkashTrxID;
-    cart.generateArray().forEach(function(product) {
-      console.log(
-        product.item.name,
-        product.size,
-        product.quantity,
-        product.item.price
-      );
-    });
     const amount = cart.totalPrice;
     const paymentMethod = req.body.paymentMethod;
-    console.log(
-      amount,
-      paymentMethod,
-      mobileNumber,
-      address,
-      bkashNumber,
-      bkashTrxID
-    );
+    const products = cart.generateArray();
+
+    if (req.isAuthenticated()) {
+      const order = new Order({
+        userId: req.user._id,
+        userName: req.user.fName,
+        mobileNumber: mobileNumber,
+        products: products,
+        address: address,
+        amount: amount,
+        paymentMethod: {
+          paymentMethodName: paymentMethod,
+          bkashNumber: bkashNumber,
+          bkashTrxID: bkashTrxID
+        },
+        date: new Date()
+      });
+
+      order.save(function(err) {
+        if (err) {
+          console.log(err);
+        } else {
+          res.redirect("/success");
+        }
+      });
+    } else {
+      res.redirect("/login");
+    }
   });
+
+// Order Success
+app.route("/success").get(function(req, res) {
+  res.render("orderSuccess");
+});
 
 //server port
 let port = process.env.PORT;
