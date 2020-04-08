@@ -16,6 +16,48 @@
         <div class="tab-content" id="v-pills-tabContent">
           <div class="tab-pane fade show active" id="v-pills-orders" role="tabpanel" aria-labelledby="v-pills-orders-tab">
             
+             <% if (orders !== null) { %>
+              <% orders.forEach(function(order) { %>
+                <div class="card p-3 mb-3 bg-light text-center">
+  
+                
+              <div class="row">
+                <div class="col-md-4">
+                  <h5 class="font-weight-bold p-0">Items</h5>
+                  <hr>
+                  <% let i=1;%>
+                  <% order.products.forEach(function(eachItem) { %>
+                    <p class="text-left ml-3"><%= i %>. <%= eachItem.item.name %> (x<%= eachItem.quantity %> ) </p>
+                  <% i++; %> 
+                    <% }); %>
+                     
+                 
+                </div>
+                <div class="col-md-3">
+                  <h5 class="font-weight-bold">Order Status</h5>
+                  <hr>
+                   <p class="font-weight-bold"><%= order.paymentStatus %></p>
+                </div>
+                <div class="col-md-3">
+                  <h5 class="font-weight-bold">Total Amount</h5>
+                  <hr>
+                  <p><%= order.amount %> Tk</p>
+                </div>
+                <div class="col-md-2">
+                  <h5 class="font-weight-bold">Date</h5>
+                  <hr>
+                   <p><%= order.date %> </p>
+                </div>
+              </div>
+              
+            </div>
+              <% }) %>
+             <% } else { %>
+              <div class="text-center">
+                <h4>No Order Placed Yet!</h4>
+                <i class="fas fa-frown fa-7x"></i>
+              </div>
+            <% } %> 
           </div>
         </div>
       </div>

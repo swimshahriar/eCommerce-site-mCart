@@ -28,16 +28,16 @@ app.use(
     resave: false,
     saveUninitialized: false,
     store: new MongoStore({
-      mongooseConnection: mongoose.connection
+      mongooseConnection: mongoose.connection,
     }),
-    cookie: { originalMaxAge: 180 * 60 * 1000 }
+    cookie: { originalMaxAge: 180 * 60 * 1000 },
   })
 );
 
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.locals.login = req.isAuthenticated();
   res.locals.session = req.session;
   next();
@@ -48,7 +48,7 @@ app.use(function(req, res, next) {
 mongoose.connect(process.env.MONGODB_ATLAS, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useFindAndModify: false
+  useFindAndModify: false,
 });
 
 mongoose.set("useCreateIndex", true);
@@ -59,7 +59,7 @@ const userSchema = new mongoose.Schema({
   fName: String,
   lName: String,
   username: String,
-  password: String
+  password: String,
 });
 
 const productSchema = new mongoose.Schema({
@@ -70,8 +70,8 @@ const productSchema = new mongoose.Schema({
   price: Number,
   description: String,
   featured: {
-    default: false
-  }
+    default: false,
+  },
 });
 
 const reviewSchema = new mongoose.Schema({
@@ -79,7 +79,7 @@ const reviewSchema = new mongoose.Schema({
   productName: String,
   score: Number,
   comment: String,
-  date: Date
+  date: Date,
 });
 
 const orderSchema = new mongoose.Schema({
@@ -91,13 +91,13 @@ const orderSchema = new mongoose.Schema({
   paymentMethod: {
     paymentMethodName: String,
     bkashNumber: Number,
-    bkashTrxID: String
+    bkashTrxID: String,
   },
   date: Date,
   paymentStatus: {
     type: String,
-    default: "Pending"
-  }
+    default: "Pending",
+  },
 });
 
 // Plugins
@@ -118,11 +118,13 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+// Date Format
+
 //home ruote
 app
   .route("/")
-  .get(function(req, res) {
-    Product.find({ featured: "true" }, function(err, products) {
+  .get(function (req, res) {
+    Product.find({ featured: "true" }, function (err, products) {
       if (err) {
         console.log(err);
       } else {
@@ -131,7 +133,7 @@ app
     });
   })
 
-  .post(function(req, res) {
+  .post(function (req, res) {
     // Newsletter
 
     const lastName = req.body.name;
@@ -143,10 +145,10 @@ app
           email_address: email,
           status: "subscribed",
           merge_fields: {
-            LNAME: lastName
-          }
-        }
-      ]
+            LNAME: lastName,
+          },
+        },
+      ],
     };
 
     const jsonData = JSON.stringify(data);
@@ -155,12 +157,12 @@ app
       url: process.env.MAIL_CHIMP_LIST,
       method: "POST",
       headers: {
-        Authorization: process.env.MAIL_CHIMP_API
+        Authorization: process.env.MAIL_CHIMP_API,
       },
-      body: jsonData
+      body: jsonData,
     };
 
-    request(options, function(error, response, body) {
+    request(options, function (error, response, body) {
       if (response.statusCode == 200) {
         res.render("success");
       } else if (error) {
@@ -175,7 +177,7 @@ app
 app
   .route("/about")
 
-  .get(function(req, res) {
+  .get(function (req, res) {
     res.render("about");
   });
 
@@ -183,23 +185,23 @@ app
 app
   .route("/contact")
 
-  .get(function(req, res) {
+  .get(function (req, res) {
     res.render("contact");
   });
 
 // Admin Dashboard
 // Add Product
-app.route("/add").post(function(req, res) {
+app.route("/add").post(function (req, res) {
   const product = new Product({
     name: req.body.name,
     imageUrl: req.body.imageUrl,
     category: req.body.category,
     size: req.body.size,
     price: req.body.price,
-    description: req.body.description
+    description: req.body.description,
   });
 
-  product.save(function(err) {
+  product.save(function (err) {
     if (err) {
       console.log(err);
     } else {
@@ -209,10 +211,10 @@ app.route("/add").post(function(req, res) {
 });
 
 // Delete product
-app.route("/delete").post(function(req, res) {
+app.route("/delete").post(function (req, res) {
   const productName = req.body.name;
 
-  Product.deleteOne({ name: productName }, function(err) {
+  Product.deleteOne({ name: productName }, function (err) {
     if (!err) {
       res.redirect("/admin");
     } else {
@@ -222,22 +224,23 @@ app.route("/delete").post(function(req, res) {
 });
 
 // Featured Products
-app.route("/featured-products").post(function(req, res) {
+app.route("/featured-products").post(function (req, res) {
   const featuredProduct = req.body.featuredProduct;
   const operation = req.body.operation;
 
   if (operation === "add") {
-    Product.updateOne({ name: featuredProduct }, { featured: "true" }, function(
-      err,
-      product
-    ) {
-      res.redirect("admin");
-    });
+    Product.updateOne(
+      { name: featuredProduct },
+      { featured: "true" },
+      function (err, product) {
+        res.redirect("admin");
+      }
+    );
   } else {
     Product.updateOne(
       { name: featuredProduct },
       { featured: "false" },
-      function(err, product) {
+      function (err, product) {
         res.redirect("admin");
       }
     );
@@ -245,31 +248,31 @@ app.route("/featured-products").post(function(req, res) {
 });
 
 // All Products Route
-app.route("/products").get(function(req, res) {
-  Product.find(function(err, products) {
+app.route("/products").get(function (req, res) {
+  Product.find(function (err, products) {
     if (err) {
       console.log(err);
     } else {
       res.render("allProduct", {
         category: products.category,
-        products: products
+        products: products,
       });
     }
   });
 });
 
 // All products filter route
-app.route("/products/price/:min/:max").get(function(req, res) {
+app.route("/products/price/:min/:max").get(function (req, res) {
   const min = req.params.min;
   const max = req.params.max;
 
-  Product.find({ price: { $gte: min, $lt: max } }, function(err, products) {
+  Product.find({ price: { $gte: min, $lt: max } }, function (err, products) {
     if (err) {
       console.log(err);
     } else {
       res.render("allProduct", {
         category: products.category,
-        products: products
+        products: products,
       });
     }
   });
@@ -277,17 +280,17 @@ app.route("/products/price/:min/:max").get(function(req, res) {
 
 // Category Routes
 
-app.route("/category/:categoryRoute").get(function(req, res) {
+app.route("/category/:categoryRoute").get(function (req, res) {
   const categoryRoute = req.params.categoryRoute;
   const categoryLower = _.lowerFirst(categoryRoute);
-  Product.find({ category: categoryRoute }, function(err, products) {
+  Product.find({ category: categoryRoute }, function (err, products) {
     if (err) {
       console.log(err);
     } else {
       res.render("category", {
         category: _.upperFirst(categoryRoute),
         categoryLower: categoryLower,
-        products: products
+        products: products,
       });
     }
   });
@@ -296,7 +299,7 @@ app.route("/category/:categoryRoute").get(function(req, res) {
 // Filter Route
 app
   .route("/category/:categoryRoute/price/:min/:max")
-  .get(function(req, res) {
+  .get(function (req, res) {
     const categoryRoute = _.lowerFirst(req.params.categoryRoute);
     const min = req.params.min;
     const max = req.params.max;
@@ -304,48 +307,48 @@ app
 
     Product.find(
       { category: categoryRoute, price: { $gte: min, $lt: max } },
-      function(err, products) {
+      function (err, products) {
         if (err) {
           console.log(err);
         } else {
           res.render("category", {
             category: _.upperFirst(categoryRoute),
             categoryLower: categoryRoute,
-            products: products
+            products: products,
           });
         }
       }
     );
   })
-  .post(function(req, res) {});
+  .post(function (req, res) {});
 
 // Products Page
-app.route("/category/:categoryName/:productName").get(function(req, res) {
+app.route("/category/:categoryName/:productName").get(function (req, res) {
   const categoryName = req.params.categoryName;
   const productName = req.params.productName;
 
-  Product.findOne({ name: productName }, function(err, product) {
+  Product.findOne({ name: productName }, function (err, product) {
     if (err) {
       console.log(err);
     } else {
-      Review.find({ productName: product.name }, function(err, review) {
+      Review.find({ productName: product.name }, function (err, review) {
         if (err) {
           console.log(err);
         } else {
           Review.aggregate(
             [
               {
-                $match: { productName: product.name }
+                $match: { productName: product.name },
               },
               {
                 $group: {
                   _id: null,
                   count: { $sum: 1 },
-                  total: { $sum: "$score" }
-                }
-              }
+                  total: { $sum: "$score" },
+                },
+              },
             ],
-            function(err, found) {
+            function (err, found) {
               if (!err) {
                 console.log(found[0]);
                 if (found[0] != undefined) {
@@ -357,7 +360,7 @@ app.route("/category/:categoryName/:productName").get(function(req, res) {
                     price: product.price,
                     reviewer: review,
                     rating: found[0].total / found[0].count,
-                    numOfReviewer: found[0].count
+                    numOfReviewer: found[0].count,
                   });
                 } else {
                   res.render("product", {
@@ -368,7 +371,7 @@ app.route("/category/:categoryName/:productName").get(function(req, res) {
                     price: product.price,
                     reviewer: review,
                     rating: 0,
-                    numOfReviewer: 0
+                    numOfReviewer: 0,
                   });
                 }
               } else {
@@ -383,21 +386,21 @@ app.route("/category/:categoryName/:productName").get(function(req, res) {
 });
 
 // Review Route
-app.route("/review").post(function(req, res) {
+app.route("/review").post(function (req, res) {
   const score = req.body.score;
   const comment = req.body.comment;
 
   if (req.isAuthenticated()) {
     const review = new Review({
-      userName: req.user.fName,
+      userName: req.user.fName + " " + req.user.lName,
       productName: req.body.productName,
       score: score,
       comment: comment,
-      date: new Date()
+      date: new Date(),
     });
 
     console.log(review, req.body.productName);
-    review.save(function(err) {
+    review.save(function (err) {
       if (err) {
         console.log(err);
       } else {
@@ -412,28 +415,28 @@ app.route("/review").post(function(req, res) {
 // Register Route
 app
   .route("/register")
-  .get(function(req, res) {
+  .get(function (req, res) {
     if (req.isAuthenticated()) {
       res.redirect("/account");
     } else {
       res.render("register");
     }
   })
-  .post(function(req, res) {
+  .post(function (req, res) {
     const password = req.body.password;
     if (password.length >= 6 && password === req.body.reTypePass) {
       User.register(
         {
           fName: req.body.fName,
           lName: req.body.lName,
-          username: req.body.username
+          username: req.body.username,
         },
         password,
-        function(err, user) {
+        function (err, user) {
           if (err) {
             res.redirect("/register");
           } else {
-            passport.authenticate("local")(req, res, function() {
+            passport.authenticate("local")(req, res, function () {
               res.redirect("/products");
             });
           }
@@ -447,7 +450,7 @@ app
 // Login Route
 app
   .route("/login")
-  .get(function(req, res) {
+  .get(function (req, res) {
     if (req.isAuthenticated()) {
       if (req.user.username === "admin@admin.com") {
         res.redirect("/admin");
@@ -459,17 +462,17 @@ app
     }
   })
 
-  .post(function(req, res) {
+  .post(function (req, res) {
     const user = new User({
       username: req.body.username,
-      password: req.body.password
+      password: req.body.password,
     });
 
-    req.login(user, function(err) {
+    req.login(user, function (err) {
       if (err) {
         res.redirect("/login");
       } else {
-        passport.authenticate("local")(req, res, function() {
+        passport.authenticate("local")(req, res, function () {
           if (req.user.username === "admin@admin.com") {
             res.redirect("/admin");
           } else {
@@ -481,22 +484,34 @@ app
   });
 
 // Account Route
-app.route("/account").get(function(req, res) {
+app.route("/account").get(function (req, res) {
   if (req.isAuthenticated()) {
-    res.render("account", { fName: req.user.fName, lName: req.user.lName });
+    Order.find({ userId: req.user._id }, function (err, orders) {})
+      .sort({ date: -1 })
+      .exec(function (err, orders) {
+        if (!err) {
+          res.render("account", {
+            fName: req.user.fName,
+            lName: req.user.lName,
+            orders: orders,
+          });
+        } else {
+          console.log(err);
+        }
+      });
   } else {
     res.redirect("/login");
   }
 });
 
 // Logout Route
-app.route("/logout").get(function(req, res) {
+app.route("/logout").get(function (req, res) {
   req.logout();
   res.redirect("/login");
 });
 
 // Admin Route
-app.route("/admin").get(function(req, res) {
+app.route("/admin").get(function (req, res) {
   if (req.isAuthenticated() && req.user.username === "admin@admin.com") {
     res.render("admin");
   } else {
@@ -511,14 +526,14 @@ function Cart(oldCart) {
   this.totalItems = oldCart.totalItems || 0;
   this.totalPrice = oldCart.totalPrice || 0;
 
-  this.add = function(item, name, size) {
+  this.add = function (item, name, size) {
     let cartItem = this.items[name];
     if (!cartItem) {
       cartItem = this.items[name] = {
         item: item,
         quantity: 0,
         price: 0,
-        size: size
+        size: size,
       };
     }
     cartItem.quantity++;
@@ -527,7 +542,7 @@ function Cart(oldCart) {
     this.totalPrice += cartItem.item.price;
   };
 
-  this.reduceByOne = function(name) {
+  this.reduceByOne = function (name) {
     this.items[name].quantity--;
     this.items[name].price -= this.items[name].item.price;
     this.totalItems--;
@@ -538,21 +553,21 @@ function Cart(oldCart) {
     }
   };
 
-  this.increaseByOne = function(name) {
+  this.increaseByOne = function (name) {
     this.items[name].quantity++;
     this.items[name].price += this.items[name].item.price;
     this.totalItems++;
     this.totalPrice += this.items[name].item.price;
   };
 
-  this.removeItem = function(name) {
+  this.removeItem = function (name) {
     this.totalItems -= this.items[name].quantity;
     this.totalPrice -= this.items[name].price;
 
     delete this.items[name];
   };
 
-  this.generateArray = function() {
+  this.generateArray = function () {
     const arr = [];
     for (var name in this.items) {
       arr.push(this.items[name]);
@@ -562,11 +577,11 @@ function Cart(oldCart) {
 }
 
 // Cart Route
-app.route("/add-to-cart/:name").get(function(req, res) {
+app.route("/add-to-cart/:name").get(function (req, res) {
   const name = req.params.name;
   const cart = new Cart(req.session.cart ? req.session.cart : {});
 
-  Product.findOne({ name: name }, function(err, product) {
+  Product.findOne({ name: name }, function (err, product) {
     if (err) {
       console.log(err);
     } else {
@@ -579,7 +594,7 @@ app.route("/add-to-cart/:name").get(function(req, res) {
 });
 
 // IncreaseByOne
-app.route("/increase/:name").get(function(req, res) {
+app.route("/increase/:name").get(function (req, res) {
   const name = req.params.name;
   const cart = new Cart(req.session.cart ? req.session.cart : {});
 
@@ -589,7 +604,7 @@ app.route("/increase/:name").get(function(req, res) {
 });
 
 // ReduceByOne
-app.route("/reduce/:name").get(function(req, res) {
+app.route("/reduce/:name").get(function (req, res) {
   const name = req.params.name;
   const cart = new Cart(req.session.cart ? req.session.cart : {});
 
@@ -599,7 +614,7 @@ app.route("/reduce/:name").get(function(req, res) {
 });
 
 // RemoveItems
-app.route("/removeItem/:name").get(function(req, res) {
+app.route("/removeItem/:name").get(function (req, res) {
   const name = req.params.name;
   const cart = new Cart(req.session.cart ? req.session.cart : {});
 
@@ -609,8 +624,8 @@ app.route("/removeItem/:name").get(function(req, res) {
 });
 
 // Cart Modal Route
-app.route("/cart").get(function(req, res) {
-  if (!req.session.cart) {
+app.route("/cart").get(function (req, res) {
+  if (!req.session.cart ) {
     res.render("cart", { products: null });
   } else {
     const cart = new Cart(req.session.cart);
@@ -626,7 +641,7 @@ app.route("/cart").get(function(req, res) {
 // Checkout Route
 app
   .route("/checkout")
-  .get(function(req, res) {
+  .get(function (req, res) {
     if (!req.session.cart) {
       res.redirect("/cart");
     } else {
@@ -635,7 +650,7 @@ app
       res.render("checkout", { total: cart.totalPrice });
     }
   })
-  .post(function(req, res) {
+  .post(function (req, res) {
     const cart = new Cart(req.session.cart);
     const mobileNumber = req.body.mobileNumber;
     const address = req.body.address;
@@ -648,7 +663,7 @@ app
     if (req.isAuthenticated()) {
       const order = new Order({
         userId: req.user._id,
-        userName: req.user.fName,
+        userName: req.user.fName + " " + req.user.lName,
         mobileNumber: mobileNumber,
         products: products,
         address: address,
@@ -656,15 +671,16 @@ app
         paymentMethod: {
           paymentMethodName: paymentMethod,
           bkashNumber: bkashNumber,
-          bkashTrxID: bkashTrxID
+          bkashTrxID: bkashTrxID,
         },
-        date: new Date()
+        date: new Date(),
       });
 
-      order.save(function(err) {
+      order.save(function (err) {
         if (err) {
           console.log(err);
         } else {
+          req.session.cart = null;
           res.redirect("/success");
         }
       });
@@ -674,7 +690,7 @@ app
   });
 
 // Order Success
-app.route("/success").get(function(req, res) {
+app.route("/success").get(function (req, res) {
   res.render("orderSuccess");
 });
 
@@ -683,6 +699,6 @@ let port = process.env.PORT;
 if (port == null || port == "") {
   port = 3000;
 }
-app.listen(port, function() {
+app.listen(port, function () {
   console.log("server started on port " + port);
 });
