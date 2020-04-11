@@ -189,7 +189,7 @@ h1 {
 
 /* Admin page */
 .container-admin {
-  padding: 7% 15%;
+  padding: 4% 15%;
 }
 .container-admin > .nav-link {
   background-color: #00adb5;
@@ -285,6 +285,7 @@ h1 {
   .home-carousal-image2 {
     width: 60%;
   }
+  
 
   /* About Page */
   .avatar {
@@ -294,6 +295,9 @@ h1 {
     padding: 2% 10% 2% 10%;
   }
   .checkout-section {
+    padding: 2% 10% 5% 10%;
+  }
+  .container-admin {
     padding: 2% 10% 5% 10%;
   }
 }
@@ -306,5 +310,8 @@ h1 {
   }
   .checkout-section {
     padding: 2% 10% 5% 10%;
+  }
+  .container-admin {
+    padding: 0.5% 0.5% 0.5% 0.5%;
   }
 }

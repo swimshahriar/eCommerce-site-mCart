@@ -1,0 +1,84 @@
+<%- include("partials/header.ejs") %>
+
+<section id="orderDetails">
+  <div class="container-fluid about-top">
+    <h1>Order Details</h1>
+  </div>
+
+  <div class="container-fluid container-admin">
+    <div class="text-right">
+      <h5 class="mb-3 font-weight-bold" style="color: green;">
+        Order Status: <%= order.orderStatus %>
+      </h5>
+    </div>
+    <div>
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Items</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Size</th>
+            <th scope="col">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% let i = 1; %> <% order.products.forEach(function(product) { %>
+
+          <tr>
+            <th scope="row"><%= i %></th>
+            <td><%= product.item.name %></td>
+            <td>x<%= product.quantity %></td>
+            <td><%= product.size %></td>
+            <td><%= product.price %>TK</td>
+          </tr>
+          <% i++; %> <% }) %>
+
+          <tr>
+            <th colspan="4" class="text-center">Total:</th>
+            <td><%= order.amount %>TK</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="text-center">
+        <h4 id="orderDate">Order Date: <%= order.date %></h4>
+      </div>
+
+      <div class="mt-5">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th scope="col">Customer Name</th>
+              <th scope="col">Mobile</th>
+              <th scope="col">Address</th>
+              <th scope="col">Payment</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><%= order.userName %></td>
+              <td><%= order.mobileNumber %></td>
+              <td><%= order.address %></td>
+              <td>
+                <%= order.paymentMethod.paymentMethodName %> <%=
+                order.paymentMethod.bkashNumber %> <%=
+                order.paymentMethod.bkashTrxID %>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <form action="/customer/order/<%= order._id %>" method="post">
+      <div class="text-right">
+        <p class="font-weight-bold">
+          You can only cancel an order if your Order Status is Pending.
+        </p>
+        <button class="btn btn-danger" type="submit">Cancel Order</button>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%- include("partials/footer.ejs") %>

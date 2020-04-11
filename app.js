@@ -86,6 +86,7 @@ const orderSchema = new mongoose.Schema({
   userId: String,
   userName: String,
   products: [],
+  mobileNumber: String,
   address: String,
   amount: Number,
   paymentMethod: {
@@ -94,7 +95,7 @@ const orderSchema = new mongoose.Schema({
     bkashTrxID: String,
   },
   date: Date,
-  paymentStatus: {
+  orderStatus: {
     type: String,
     default: "Pending",
   },
@@ -189,6 +190,49 @@ app
     res.render("contact");
   });
 
+// Admin Route
+app.route("/admin").get(function (req, res) {
+  if (req.isAuthenticated() && req.user.username === "admin@admin.com") {
+    Order.find({ orderStatus: "Pending" }, function (err, pendingOrders) {})
+      .sort({ date: -1 })
+      .exec(function (err, pendingOrders) {
+        Order.find({ orderStatus: "Processing" }, function (
+          err,
+          processingOrders
+        ) {})
+          .sort({ date: -1 })
+          .exec(function (err, processingOrders) {
+            Order.find({ orderStatus: "Delivered" }, function (
+              err,
+              deliveredOrders
+            ) {})
+              .sort({ date: -1 })
+              .exec(function (err, deliveredOrders) {
+                Order.find({ orderStatus: "Canceled" }, function (
+                  err,
+                  canceledOrders
+                ) {})
+                  .sort({ date: -1 })
+                  .exec(function (err, canceledOrders) {
+                    if (!err) {
+                      res.render("admin", {
+                        pendingOrders: pendingOrders,
+                        processingOrders: processingOrders,
+                        deliveredOrders: deliveredOrders,
+                        canceledOrders: canceledOrders,
+                      });
+                    } else {
+                      console.log(err);
+                    }
+                  });
+              });
+          });
+      });
+  } else {
+    res.redirect("/login");
+  }
+});
+
 // Admin Dashboard
 // Add Product
 app.route("/add").post(function (req, res) {
@@ -246,6 +290,75 @@ app.route("/featured-products").post(function (req, res) {
     );
   }
 });
+
+// Order Management Route
+app
+  .route("/order/:productId")
+  .get(function (req, res) {
+    const productId = req.params.productId;
+
+    Order.findOne({ _id: productId }, function (err, orderInfo) {
+      if (!err) {
+        res.render("orderDetails", { order: orderInfo });
+      } else {
+        console.log(err);
+      }
+    });
+  })
+  .post(function (req, res) {
+    const productId = req.params.productId;
+
+    Order.updateOne(
+      { _id: productId },
+      { orderStatus: req.body.orderStatus },
+      function (err, product) {
+        if (!err) {
+          res.redirect("/order/" + productId);
+        } else {
+          console.log(err);
+        }
+      }
+    );
+  });
+
+// Customer Order Details
+app
+  .route("/customer/order/:productId")
+  .get(function (req, res) {
+    const productId = req.params.productId;
+
+    Order.findOne({ _id: productId }, function (err, orderInfo) {
+      if (!err) {
+        res.render("customerOrder", { order: orderInfo });
+      } else {
+        console.log(err);
+      }
+    });
+  })
+  .post(function (req, res) {
+    const productId = req.params.productId;
+    Order.findOne({ _id: productId }, function (err, orderInfo) {
+      if (!err && orderInfo.orderStatus === "Pending") {
+        Order.updateOne(
+          { _id: productId },
+          { orderStatus: "Canceled" },
+          function (err, product) {
+            if (!err) {
+              res.redirect("customer/order/" + productId);
+            } else {
+              console.log(err);
+            }
+          }
+        );
+      } else {
+        if (!err && orderInfo.orderStatus !== "Pending") {
+          res.redirect("/customer/order/" + productId);
+        } else {
+          console.log(err);
+        }
+      }
+    });
+  });
 
 // All Products Route
 app.route("/products").get(function (req, res) {
@@ -510,15 +623,6 @@ app.route("/logout").get(function (req, res) {
   res.redirect("/login");
 });
 
-// Admin Route
-app.route("/admin").get(function (req, res) {
-  if (req.isAuthenticated() && req.user.username === "admin@admin.com") {
-    res.render("admin");
-  } else {
-    res.redirect("/login");
-  }
-});
-
 // Cart Function
 function Cart(oldCart) {
   this.items = oldCart.items || {};
@@ -623,9 +727,9 @@ app.route("/removeItem/:name").get(function (req, res) {
   res.redirect("/cart");
 });
 
-// Cart Modal Route
+// Cart Route
 app.route("/cart").get(function (req, res) {
-  if (!req.session.cart ) {
+  if (!req.session.cart) {
     res.render("cart", { products: null });
   } else {
     const cart = new Cart(req.session.cart);
@@ -633,7 +737,7 @@ app.route("/cart").get(function (req, res) {
     res.render("cart", {
       products: cart.generateArray(),
       totalPrice: cart.totalPrice,
-      totalItems: cart.totalItems
+      totalItems: cart.totalItems,
     });
   }
 });

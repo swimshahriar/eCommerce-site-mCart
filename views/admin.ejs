@@ -213,11 +213,11 @@
               <li class="nav-item">
                 <a
                   class="nav-link active"
-                  id="pills-home-tab"
+                  id="pendingOrder-tab"
                   data-toggle="pill"
-                  href="#pills-home"
+                  href="#pendingOrder"
                   role="tab"
-                  aria-controls="pills-home"
+                  aria-controls="pendingOrder"
                   aria-selected="true"
                   >Pending</a
                 >
@@ -225,11 +225,11 @@
               <li class="nav-item">
                 <a
                   class="nav-link"
-                  id="pills-profile-tab"
+                  id="processingOrder-tab"
                   data-toggle="pill"
-                  href="#pills-profile"
+                  href="#processingOrder"
                   role="tab"
-                  aria-controls="pills-profile"
+                  aria-controls="processingOrder"
                   aria-selected="false"
                   >Processing</a
                 >
@@ -237,41 +237,225 @@
               <li class="nav-item">
                 <a
                   class="nav-link"
-                  id="pills-contact-tab"
+                  id="deliveredOrder-tab"
                   data-toggle="pill"
-                  href="#pills-contact"
+                  href="#deliveredOrder"
                   role="tab"
-                  aria-controls="pills-contact"
+                  aria-controls="deliveredOrder"
                   aria-selected="false"
                   >Delivered</a
                 >
               </li>
+              <li class="nav-item">
+                <a
+                  class="nav-link"
+                  id="canceledOrder-tab"
+                  data-toggle="pill"
+                  href="#canceledOrder"
+                  role="tab"
+                  aria-controls="canceledOrdert"
+                  aria-selected="false"
+                  >Canceled</a
+                >
+              </li>
             </ul>
-            <hr>
+            <hr />
             <div class="tab-content" id="pills-tabContent">
               <div
                 class="tab-pane fade show active"
-                id="pills-home"
+                id="pendingOrder"
                 role="tabpanel"
-                aria-labelledby="pills-home-tab"
+                aria-labelledby="pendingOrder-tab"
               >
-                ...
+                <% if (pendingOrders.length !== 0) { %> <%
+                pendingOrders.forEach(function(order) { %>
+                <div class="card p-3 mb-3 bg-light text-center">
+                  <div class="row">
+                    <div class="col-xl-4">
+                      <h5 class="font-weight-bold p-0">Items</h5>
+                      <hr />
+                      <% let i=1;%> <% order.products.forEach(function(eachItem)
+                      { %>
+                      <p class="text-left ml-3">
+                        <%= i %>. <%= eachItem.item.name %> (x<%=
+                        eachItem.quantity %> )
+                      </p>
+                      <% i++; %> <% }); %>
+                    </div>
+                    <div class="col-xl-2">
+                      <h5 class="font-weight-bold">Status</h5>
+                      <hr />
+                      <p class="font-weight-bold" style="color: red;">
+                        <%= order.orderStatus %>
+                      </p>
+                    </div>
+                    <div class="col-xl-3">
+                      <h5 class="font-weight-bold">Total</h5>
+                      <hr />
+                      <p><%= order.amount %> Tk</p>
+                    </div>
+                    <div class="col-xl-3">
+                      <h5 class="font-weight-bold">Details</h5>
+                      <hr />
+                      <a class="btn btn-danger" href="/order/<%= order._id %>"
+                        >Details</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <% }) %> <% } else { %>
+                <div class="text-center">
+                  <h4>No Order Pending!</h4>
+                  <i class="fas fa-smile fa-7x"></i>
+                </div>
+                <% } %>
               </div>
               <div
                 class="tab-pane fade"
-                id="pills-profile"
+                id="processingOrder"
                 role="tabpanel"
-                aria-labelledby="pills-profile-tab"
+                aria-labelledby="processingOrder-tab"
               >
-                ...
+                <% if (processingOrders.length !== 0) { %> <%
+                processingOrders.forEach(function(order) { %>
+                <div class="card p-3 mb-3 bg-light text-center">
+                  <div class="row">
+                    <div class="col-xl-4">
+                      <h5 class="font-weight-bold p-0">Items</h5>
+                      <hr />
+                      <% let i=1;%> <% order.products.forEach(function(eachItem)
+                      { %>
+                      <p class="text-left ml-3">
+                        <%= i %>. <%= eachItem.item.name %> (x<%=
+                        eachItem.quantity %> )
+                      </p>
+                      <% i++; %> <% }); %>
+                    </div>
+                    <div class="col-xl-2">
+                      <h5 class="font-weight-bold">Status</h5>
+                      <hr />
+                      <p class="font-weight-bold" style="color: orange;">
+                        <%= order.orderStatus %>
+                      </p>
+                    </div>
+                    <div class="col-xl-3">
+                      <h5 class="font-weight-bold">Total</h5>
+                      <hr />
+                      <p><%= order.amount %> Tk</p>
+                    </div>
+                    <div class="col-xl-3">
+                      <h5 class="font-weight-bold">Details</h5>
+                      <hr />
+                      <a class="btn btn-warning" href="/order/<%= order._id %>"
+                        >Details</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <% }) %> <% } else { %>
+                <div class="text-center">
+                  <h4>No Order Processed Yet!</h4>
+                  <i class="fas fa-frown fa-7x"></i>
+                </div>
+                <% } %>
               </div>
               <div
                 class="tab-pane fade"
-                id="pills-contact"
+                id="deliveredOrder"
                 role="tabpanel"
-                aria-labelledby="pills-contact-tab"
+                aria-labelledby="deliveredOrder-tab"
               >
-                ...
+                <% if (deliveredOrders.length !== 0) { %> <%
+                deliveredOrders.forEach(function(order) { %>
+                <div class="card p-3 mb-3 bg-light text-center">
+                  <div class="row">
+                    <div class="col-xl-4">
+                      <h5 class="font-weight-bold p-0">Items</h5>
+                      <hr />
+                      <% let i=1;%> <% order.products.forEach(function(eachItem)
+                      { %>
+                      <p class="text-left ml-3">
+                        <%= i %>. <%= eachItem.item.name %> (x<%=
+                        eachItem.quantity %> )
+                      </p>
+                      <% i++; %> <% }); %>
+                    </div>
+                    <div class="col-xl-2">
+                      <h5 class="font-weight-bold">Status</h5>
+                      <hr />
+                      <p class="font-weight-bold" style="color: green;">
+                        <%= order.orderStatus %>
+                      </p>
+                    </div>
+                    <div class="col-xl-3">
+                      <h5 class="font-weight-bold">Total</h5>
+                      <hr />
+                      <p><%= order.amount %> Tk</p>
+                    </div>
+                    <div class="col-xl-3">
+                      <h5 class="font-weight-bold">Details</h5>
+                      <hr />
+                      <a class="btn btn-success" href="/order/<%= order._id %>"
+                        >Details</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <% }) %> <% } else { %>
+                <div class="text-center">
+                  <h4>No Order Delivered Yet!</h4>
+                  <i class="fas fa-frown fa-7x"></i>
+                </div>
+                <% } %>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="canceledOrder"
+                role="tabpanel"
+                aria-labelledby="canceledOrder-tab"
+              >
+                <% if (canceledOrders.length !== 0) { %> <%
+                canceledOrders.forEach(function(order) { %>
+                <div class="card p-3 mb-3 bg-light text-center">
+                  <div class="row">
+                    <div class="col-xl-4">
+                      <h5 class="font-weight-bold p-0">Items</h5>
+                      <hr />
+                      <% let i=1;%> <% order.products.forEach(function(eachItem)
+                      { %>
+                      <p class="text-left ml-3">
+                        <%= i %>. <%= eachItem.item.name %> (x<%=
+                        eachItem.quantity %> )
+                      </p>
+                      <% i++; %> <% }); %>
+                    </div>
+                    <div class="col-xl-2">
+                      <h5 class="font-weight-bold">Status</h5>
+                      <hr />
+                      <p class="font-weight-bold" style="color: red;">
+                        <%= order.orderStatus %>
+                      </p>
+                    </div>
+                    <div class="col-xl-3">
+                      <h5 class="font-weight-bold">Total</h5>
+                      <hr />
+                      <p><%= order.amount %> Tk</p>
+                    </div>
+                    <div class="col-xl-3">
+                      <h5 class="font-weight-bold">Details</h5>
+                      <hr />
+                      <a class="btn btn-danger" href="/order/<%= order._id %>"
+                        >Details</a
+                      >
+                    </div>
+                  </div>
+                </div>
+                <% }) %> <% } else { %>
+                <div class="text-center">
+                  <h4>No Order Canceled Yet!</h4>
+                  <i class="fas fa-smile fa-7x"></i>
+                </div>
+                <% } %>
               </div>
             </div>
           </div>
