@@ -41,8 +41,11 @@
         </tbody>
       </table>
 
-      <div class="text-center">
-        <h4 id="orderDate">Order Date: <%= order.date %></h4>
+      <div class="text-left">
+        <h5 id="orderDate" class="font-weight-bold">Order Date:</h5>
+        <p><%= order.date %></p>
+        <h5 class="font-weight-bold">Measuremnets:</h5>
+        <p><%= order.measurement %></p>
       </div>
 
       <div class="mt-5">
@@ -73,12 +76,15 @@
     <div>
       <form action="/order/<%= order._id %>" method="post">
         <div class="form-group mt-5">
-          <label for="" class="font-weight-bold">Change Order Status</label>
+          <label for="" class="font-weight-bold"
+            >Change Order Status or Delete Order</label
+          >
           <select class="form-control" name="orderStatus" id="">
             <option value="Pending">Pending</option>
             <option value="Processing">Processing</option>
             <option value="Delivered">Delivered</option>
             <option value="Canceled">Canceled</option>
+            <option value="Delete">Delete</option>
           </select>
         </div>
         <div class="text-right">

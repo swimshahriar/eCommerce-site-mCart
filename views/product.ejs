@@ -32,7 +32,10 @@
           <h5 class="font-weight-bold">Size:</h5>
           <p><%= size %></p>
         </div>
-        <a href="/add-to-cart/<%= name %> " class="btn btn-dark" type="submit"
+        <a
+          href="/add-to-cart/<%= name %>"
+          class="btn btn-dark"
+          type="submit"
           >Add to cart</a
         >
       </div>
@@ -113,7 +116,7 @@
                 **Only for logged in users.
               </p>
             </small>
-            <form action="/review" method="post">
+            <form action="/review/<%= category %>/<%= name %>" method="post">
               <div class="form-group">
                 <input
                   type="text"

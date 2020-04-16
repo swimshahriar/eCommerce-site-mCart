@@ -88,6 +88,7 @@ const orderSchema = new mongoose.Schema({
   products: [],
   mobileNumber: String,
   address: String,
+  measurement: String,
   amount: Number,
   paymentMethod: {
     paymentMethodName: String,
@@ -236,6 +237,9 @@ app.route("/admin").get(function (req, res) {
 // Admin Dashboard
 // Add Product
 app.route("/add").post(function (req, res) {
+  const category = req.body.category;
+  const productName = req.body.name;
+
   const product = new Product({
     name: req.body.name,
     imageUrl: req.body.imageUrl,
@@ -249,7 +253,7 @@ app.route("/add").post(function (req, res) {
     if (err) {
       console.log(err);
     } else {
-      res.redirect("/admin");
+      res.redirect("/category/" + category + "/" + productName);
     }
   });
 });
@@ -308,17 +312,27 @@ app
   .post(function (req, res) {
     const productId = req.params.productId;
 
-    Order.updateOne(
-      { _id: productId },
-      { orderStatus: req.body.orderStatus },
-      function (err, product) {
+    if (req.body.orderStatus === "Delete") {
+      Order.deleteOne({ _id: productId }, function (err) {
         if (!err) {
-          res.redirect("/order/" + productId);
+          res.redirect("/admin");
         } else {
           console.log(err);
         }
-      }
-    );
+      });
+    } else {
+      Order.updateOne(
+        { _id: productId },
+        { orderStatus: req.body.orderStatus },
+        function (err, product) {
+          if (!err) {
+            res.redirect("/order/" + productId);
+          } else {
+            console.log(err);
+          }
+        }
+      );
+    }
   });
 
 // Customer Order Details
@@ -344,7 +358,7 @@ app
           { orderStatus: "Canceled" },
           function (err, product) {
             if (!err) {
-              res.redirect("customer/order/" + productId);
+              res.redirect("/account");
             } else {
               console.log(err);
             }
@@ -471,6 +485,7 @@ app.route("/category/:categoryName/:productName").get(function (req, res) {
                     description: product.description,
                     size: product.size,
                     price: product.price,
+                    category: categoryName,
                     reviewer: review,
                     rating: found[0].total / found[0].count,
                     numOfReviewer: found[0].count,
@@ -482,6 +497,7 @@ app.route("/category/:categoryName/:productName").get(function (req, res) {
                     description: product.description,
                     size: product.size,
                     price: product.price,
+                    category: categoryName,
                     reviewer: review,
                     rating: 0,
                     numOfReviewer: 0,
@@ -499,9 +515,11 @@ app.route("/category/:categoryName/:productName").get(function (req, res) {
 });
 
 // Review Route
-app.route("/review").post(function (req, res) {
+app.route("/review/:category/:productName").post(function (req, res) {
   const score = req.body.score;
   const comment = req.body.comment;
+  const category = req.params.category;
+  const product = req.params.productName;
 
   if (req.isAuthenticated()) {
     const review = new Review({
@@ -509,7 +527,7 @@ app.route("/review").post(function (req, res) {
       productName: req.body.productName,
       score: score,
       comment: comment,
-      date: new Date(),
+      date: new Date().toDateString(),
     });
 
     console.log(review, req.body.productName);
@@ -517,7 +535,7 @@ app.route("/review").post(function (req, res) {
       if (err) {
         console.log(err);
       } else {
-        res.redirect("/products");
+        res.redirect("/category/" + category + "/" + product);
       }
     });
   } else {
@@ -692,7 +710,7 @@ app.route("/add-to-cart/:name").get(function (req, res) {
       cart.add(product, product.name, product.size);
       req.session.cart = cart;
       console.log(req.session.cart);
-      res.redirect("/cart");
+      res.redirect("/category/" + product.category + "/" + name);
     }
   });
 });
@@ -758,6 +776,7 @@ app
     const cart = new Cart(req.session.cart);
     const mobileNumber = req.body.mobileNumber;
     const address = req.body.address;
+    const measurement = req.body.measurement;
     const bkashNumber = req.body.bkashNumber;
     const bkashTrxID = req.body.bkashTrxID;
     const amount = cart.totalPrice;
@@ -771,13 +790,14 @@ app
         mobileNumber: mobileNumber,
         products: products,
         address: address,
+        measurement: measurement,
         amount: amount,
         paymentMethod: {
           paymentMethodName: paymentMethod,
           bkashNumber: bkashNumber,
           bkashTrxID: bkashTrxID,
         },
-        date: new Date(),
+        date: new Date().toDateString(),
       });
 
       order.save(function (err) {

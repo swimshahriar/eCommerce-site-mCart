@@ -1,13 +1,18 @@
 // jshint esversion:6
 
 $(document).ready(function () {
-    // let value = $("input:checked").val();
+  $("#bkash-check").hide();
+  $('input[type="radio"]').click(function () {
+    let inputValue = $(this).attr("value");
 
-
-    // if (value === "Bkash") {
-    //     $("#bkash-info").removeAttr("hidden");
-    // } else {
-        
-    // }
-
+    if (inputValue === "Bkash") {
+      $("#bkash-check").show();
+      $("#bkashNumber").prop("required", true);
+      $("#bkashTrxID").prop("required", true);
+    } else {
+      $("#bkash-check").hide();
+      $("#bkashNumber").prop("required", false);
+      $("#bkashTrxID").prop("required", false);
+    }
+  });
 });

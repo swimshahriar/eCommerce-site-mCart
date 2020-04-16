@@ -41,8 +41,11 @@
         </tbody>
       </table>
 
-      <div class="text-center">
-        <h4 id="orderDate">Order Date: <%= order.date %></h4>
+      <div class="text-left">
+        <h5 id="orderDate" class="font-weight-bold">Order Date:</h5>
+        <p><%= order.date %></p>
+        <h5 class="font-weight-bold">Measuremnets:</h5>
+        <p><%= order.measurement %></p>
       </div>
 
       <div class="mt-5">
