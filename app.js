@@ -215,14 +215,133 @@ app.route("/admin").get(function (req, res) {
                 ) {})
                   .sort({ date: -1 })
                   .exec(function (err, canceledOrders) {
-                    if (!err) {
-                      res.render("admin", {
-                        pendingOrders: pendingOrders,
-                        processingOrders: processingOrders,
-                        deliveredOrders: deliveredOrders,
-                        canceledOrders: canceledOrders,
-                      });
-                    } else {
+                    Order.aggregate(
+                      [
+                        {
+                          $match: { orderStatus: "Pending" },
+                        },
+                        {
+                          $group: {
+                            _id: null,
+                            count: { $sum: 1 },
+                            total: { $sum: "$amount" },
+                          },
+                        },
+                      ],
+                      function (err, p) {
+                        if (err) {
+                          console.log(err);
+                        } else {
+                          Order.aggregate(
+                            [
+                              {
+                                $match: { orderStatus: "Processing" },
+                              },
+                              {
+                                $group: {
+                                  _id: null,
+                                  count: { $sum: 1 },
+                                  total: { $sum: "$amount" },
+                                },
+                              },
+                            ],
+                            function (err, pr) {
+                              if (err) {
+                                console.log(err);
+                              } else {
+                                Order.aggregate(
+                                  [
+                                    {
+                                      $match: { orderStatus: "Delivered" },
+                                    },
+                                    {
+                                      $group: {
+                                        _id: null,
+                                        count: { $sum: 1 },
+                                        total: { $sum: "$amount" },
+                                      },
+                                    },
+                                  ],
+                                  function (err, d) {
+                                    if (err) {
+                                      console.log(err);
+                                    } else {
+                                      Product.aggregate(
+                                        [
+                                          {
+                                            $match: { category: "t-shirt" },
+                                          },
+                                          {
+                                            $group: {
+                                              _id: null,
+                                              count: { $sum: 1 },
+                                              total: { $sum: "$price" },
+                                            },
+                                          },
+                                        ],
+                                        function (err, t) {
+                                          Product.aggregate(
+                                            [
+                                              {
+                                                $match: { category: "shirt" },
+                                              },
+                                              {
+                                                $group: {
+                                                  _id: null,
+                                                  count: { $sum: 1 },
+                                                  total: { $sum: "$price" },
+                                                },
+                                              },
+                                            ],
+                                            function (err, s) {
+                                              Product.aggregate(
+                                                [
+                                                  {
+                                                    $match: {
+                                                      category: "pant",
+                                                    },
+                                                  },
+                                                  {
+                                                    $group: {
+                                                      _id: null,
+                                                      count: { $sum: 1 },
+                                                      total: { $sum: "$price" },
+                                                    },
+                                                  },
+                                                ],
+                                                function (err, pa) {
+                                                  if (!err) {
+                                                    res.render("admin", {
+                                                      pendingOrders: pendingOrders,
+                                                      processingOrders: processingOrders,
+                                                      deliveredOrders: deliveredOrders,
+                                                      canceledOrders: canceledOrders,
+                                                      penOverview: p[0],
+                                                      prOverview: pr[0],
+                                                      delOverview: d[0],
+                                                      tShirt: t[0],
+                                                      shirt: s[0],
+                                                      pant: pa[0],
+                                                    });
+                                                  } else {
+                                                    console.log(err);
+                                                  }
+                                                }
+                                              );
+                                            }
+                                          );
+                                        }
+                                      );
+                                    }
+                                  }
+                                );
+                              }
+                            }
+                          );
+                        }
+                      }
+                    );
+                    if (err) {
                       console.log(err);
                     }
                   });
