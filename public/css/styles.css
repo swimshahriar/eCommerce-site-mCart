@@ -298,12 +298,12 @@ h1 {
     padding: 2% 10% 5% 10%;
   }
   .container-admin {
-    padding: 2% 10% 5% 10%;
+    padding: 5% 10% 5% 10%;
   }
 }
 @media (max-width: 480px) {
   h1 {
-    font-size: 2rem;
+    font-size: 5rem;
   }
   .cart-section {
     padding: 2% 5% 2% 5%;
@@ -312,6 +312,6 @@ h1 {
     padding: 2% 10% 5% 10%;
   }
   .container-admin {
-    padding: 0.5% 0.5% 0.5% 0.5%;
+    padding: 5%;
   }
 }
