@@ -303,7 +303,7 @@ h1 {
 }
 @media (max-width: 480px) {
   h1 {
-    font-size: 5rem;
+    font-size: 1rem;
   }
   .cart-section {
     padding: 2% 5% 2% 5%;
