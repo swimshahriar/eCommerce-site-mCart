@@ -326,11 +326,13 @@
                   type="text"
                   name="featuredProduct"
                   id=""
+                  placeholder="max 3 items can be added. check before adding."
+                  required
                 />
                 <label class="my-2" for="operation">Operation:</label>
                 <select class="form-control" name="operation" id="">
                   <option value="add">Add</option>
-                  <option value="delete">Delete</option>
+                  <option value="delete">Remove</option>
                 </select>
               </div>
               <div class="text-center">
@@ -409,7 +411,7 @@
               >
                 <% if (pendingOrders.length !== 0) { %> <%
                 pendingOrders.forEach(function(order) { %>
-                <div class="card p-3 mb-3 bg-light text-center">
+                <div class="card p-3 mb-3 bg-light text-center productStyle">
                   <div class="row">
                     <div class="col-xl-4">
                       <h5 class="font-weight-bold p-0">Items</h5>
@@ -458,7 +460,7 @@
               >
                 <% if (processingOrders.length !== 0) { %> <%
                 processingOrders.forEach(function(order) { %>
-                <div class="card p-3 mb-3 bg-light text-center">
+                <div class="card p-3 mb-3 bg-light text-center productStyle">
                   <div class="row">
                     <div class="col-xl-4">
                       <h5 class="font-weight-bold p-0">Items</h5>
@@ -507,7 +509,7 @@
               >
                 <% if (deliveredOrders.length !== 0) { %> <%
                 deliveredOrders.forEach(function(order) { %>
-                <div class="card p-3 mb-3 bg-light text-center">
+                <div class="card p-3 mb-3 bg-light text-center productStyle">
                   <div class="row">
                     <div class="col-xl-4">
                       <h5 class="font-weight-bold p-0">Items</h5>
@@ -556,7 +558,7 @@
               >
                 <% if (canceledOrders.length !== 0) { %> <%
                 canceledOrders.forEach(function(order) { %>
-                <div class="card p-3 mb-3 bg-light text-center">
+                <div class="card p-3 mb-3 bg-light text-center productStyle">
                   <div class="row">
                     <div class="col-xl-4">
                       <h5 class="font-weight-bold p-0">Items</h5>

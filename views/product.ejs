@@ -10,7 +10,7 @@
       <div class="col-md-6 mb-3">
         <img src="<%= imageUrl %> " alt="product image" width="90%" />
       </div>
-      <div class="col-md-6">
+      <div class="col-md-6 productStyle p-3">
         <div>
           <h5 class="font-weight-bold">Name:</h5>
           <p>
@@ -156,7 +156,7 @@
               <%= rating %>/5 (<%= numOfReviewer %> Reviews )
             </p>
             <% reviewer.forEach(function(review) { %>
-            <div class="reviewers mb-3">
+            <div class="reviewers mb-3 productStyle">
               <h5>Name: <%= review.userName %></h5>
               <h5>Score: <%= review.score %>/5</h5>
               <h5>Comment: "<%= review.comment %>"</h5>
