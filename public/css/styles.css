@@ -199,8 +199,8 @@ h1 {
 /* Product List Style */
 .productStyle {
   border: 2px solid #393e46;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px 0 #bdbdbd;
+  border-radius: 3px;
+  box-shadow: 0 4px 8px #bdbdbd;
 }
 
 /* Category page */

@@ -2,23 +2,23 @@
 // jshint esversion:8
 
 //required packages
-require("dotenv").config();
-const express = require("express");
-const bodyParser = require("body-parser");
-const ejs = require("ejs");
-const request = require("request");
-const mongoose = require("mongoose");
-const session = require("express-session");
-const passport = require("passport");
-const passportLocalMongoose = require("passport-local-mongoose");
-const _ = require("lodash");
-const MongoStore = require("connect-mongo")(session);
+require('dotenv').config();
+const express = require('express');
+const bodyParser = require('body-parser');
+const ejs = require('ejs');
+const request = require('request');
+const mongoose = require('mongoose');
+const session = require('express-session');
+const passport = require('passport');
+const passportLocalMongoose = require('passport-local-mongoose');
+const _ = require('lodash');
+const MongoStore = require('connect-mongo')(session);
 
 const app = express();
 
-app.set("view engine", "ejs");
+app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
+app.use(express.static('public'));
 
 // Passport & other sessions
 
@@ -51,7 +51,7 @@ mongoose.connect(process.env.MONGODB_ATLAS, {
   useFindAndModify: false,
 });
 
-mongoose.set("useCreateIndex", true);
+mongoose.set('useCreateIndex', true);
 
 // Mongoose Schema
 
@@ -98,7 +98,7 @@ const orderSchema = new mongoose.Schema({
   date: Date,
   orderStatus: {
     type: String,
-    default: "Pending",
+    default: 'Pending',
   },
 });
 
@@ -108,10 +108,10 @@ userSchema.plugin(passportLocalMongoose);
 
 // Mongoose Models
 
-const User = new mongoose.model("User", userSchema);
-const Product = new mongoose.model("Product", productSchema);
-const Review = new mongoose.model("Review", reviewSchema);
-const Order = new mongoose.model("Order", orderSchema);
+const User = new mongoose.model('User', userSchema);
+const Product = new mongoose.model('Product', productSchema);
+const Review = new mongoose.model('Review', reviewSchema);
+const Order = new mongoose.model('Order', orderSchema);
 
 // passport strategy
 
@@ -120,17 +120,15 @@ passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-// Date Format
-
-//home ruote
+//home route
 app
-  .route("/")
+  .route('/')
   .get(function (req, res) {
-    Product.find({ featured: "true" }, function (err, products) {
+    Product.find({ featured: 'true' }, function (err, products) {
       if (err) {
         console.log(err);
       } else {
-        res.render("home", { products: products });
+        res.render('home', { products: products });
       }
     });
   })
@@ -145,7 +143,7 @@ app
       members: [
         {
           email_address: email,
-          status: "subscribed",
+          status: 'subscribed',
           merge_fields: {
             LNAME: lastName,
           },
@@ -157,7 +155,7 @@ app
 
     const options = {
       url: process.env.MAIL_CHIMP_LIST,
-      method: "POST",
+      method: 'POST',
       headers: {
         Authorization: process.env.MAIL_CHIMP_API,
       },
@@ -166,50 +164,50 @@ app
 
     request(options, function (error, response, body) {
       if (response.statusCode == 200) {
-        res.render("success");
+        res.render('success');
       } else if (error) {
-        res.render("failed");
+        res.render('failed');
       } else {
-        res.render("failed");
+        res.render('failed');
       }
     });
   });
 
 //about route
 app
-  .route("/about")
+  .route('/about')
 
   .get(function (req, res) {
-    res.render("about");
+    res.render('about');
   });
 
 //contact route
 app
-  .route("/contact")
+  .route('/contact')
 
   .get(function (req, res) {
-    res.render("contact");
+    res.render('contact');
   });
 
 // Admin Route
-app.route("/admin").get(function (req, res) {
-  if (req.isAuthenticated() && req.user.username === "admin@admin.com") {
-    Order.find({ orderStatus: "Pending" }, function (err, pendingOrders) {})
+app.route('/admin').get(function (req, res) {
+  if (req.isAuthenticated() && req.user.username === 'admin@admin.com') {
+    Order.find({ orderStatus: 'Pending' }, function (err, pendingOrders) {})
       .sort({ date: -1 })
       .exec(function (err, pendingOrders) {
-        Order.find({ orderStatus: "Processing" }, function (
+        Order.find({ orderStatus: 'Processing' }, function (
           err,
           processingOrders
         ) {})
           .sort({ date: -1 })
           .exec(function (err, processingOrders) {
-            Order.find({ orderStatus: "Delivered" }, function (
+            Order.find({ orderStatus: 'Delivered' }, function (
               err,
               deliveredOrders
             ) {})
               .sort({ date: -1 })
               .exec(function (err, deliveredOrders) {
-                Order.find({ orderStatus: "Canceled" }, function (
+                Order.find({ orderStatus: 'Canceled' }, function (
                   err,
                   canceledOrders
                 ) {})
@@ -218,13 +216,13 @@ app.route("/admin").get(function (req, res) {
                     Order.aggregate(
                       [
                         {
-                          $match: { orderStatus: "Pending" },
+                          $match: { orderStatus: 'Pending' },
                         },
                         {
                           $group: {
                             _id: null,
                             count: { $sum: 1 },
-                            total: { $sum: "$amount" },
+                            total: { $sum: '$amount' },
                           },
                         },
                       ],
@@ -235,13 +233,13 @@ app.route("/admin").get(function (req, res) {
                           Order.aggregate(
                             [
                               {
-                                $match: { orderStatus: "Processing" },
+                                $match: { orderStatus: 'Processing' },
                               },
                               {
                                 $group: {
                                   _id: null,
                                   count: { $sum: 1 },
-                                  total: { $sum: "$amount" },
+                                  total: { $sum: '$amount' },
                                 },
                               },
                             ],
@@ -252,13 +250,13 @@ app.route("/admin").get(function (req, res) {
                                 Order.aggregate(
                                   [
                                     {
-                                      $match: { orderStatus: "Delivered" },
+                                      $match: { orderStatus: 'Delivered' },
                                     },
                                     {
                                       $group: {
                                         _id: null,
                                         count: { $sum: 1 },
-                                        total: { $sum: "$amount" },
+                                        total: { $sum: '$amount' },
                                       },
                                     },
                                   ],
@@ -269,13 +267,13 @@ app.route("/admin").get(function (req, res) {
                                       Product.aggregate(
                                         [
                                           {
-                                            $match: { category: "t-shirt" },
+                                            $match: { category: 't-shirt' },
                                           },
                                           {
                                             $group: {
                                               _id: null,
                                               count: { $sum: 1 },
-                                              total: { $sum: "$price" },
+                                              total: { $sum: '$price' },
                                             },
                                           },
                                         ],
@@ -283,13 +281,13 @@ app.route("/admin").get(function (req, res) {
                                           Product.aggregate(
                                             [
                                               {
-                                                $match: { category: "shirt" },
+                                                $match: { category: 'shirt' },
                                               },
                                               {
                                                 $group: {
                                                   _id: null,
                                                   count: { $sum: 1 },
-                                                  total: { $sum: "$price" },
+                                                  total: { $sum: '$price' },
                                                 },
                                               },
                                             ],
@@ -298,20 +296,20 @@ app.route("/admin").get(function (req, res) {
                                                 [
                                                   {
                                                     $match: {
-                                                      category: "pant",
+                                                      category: 'pant',
                                                     },
                                                   },
                                                   {
                                                     $group: {
                                                       _id: null,
                                                       count: { $sum: 1 },
-                                                      total: { $sum: "$price" },
+                                                      total: { $sum: '$price' },
                                                     },
                                                   },
                                                 ],
                                                 function (err, pa) {
                                                   if (!err) {
-                                                    res.render("admin", {
+                                                    res.render('admin', {
                                                       pendingOrders: pendingOrders,
                                                       processingOrders: processingOrders,
                                                       deliveredOrders: deliveredOrders,
@@ -349,13 +347,13 @@ app.route("/admin").get(function (req, res) {
           });
       });
   } else {
-    res.redirect("/login");
+    res.redirect('/login');
   }
 });
 
 // Admin Dashboard
 // Add Product
-app.route("/add").post(function (req, res) {
+app.route('/add').post(function (req, res) {
   const category = req.body.category;
   const productName = req.body.name;
 
@@ -372,18 +370,18 @@ app.route("/add").post(function (req, res) {
     if (err) {
       console.log(err);
     } else {
-      res.redirect("/category/" + category + "/" + productName);
+      res.redirect('/category/' + category + '/' + productName);
     }
   });
 });
 
 // Delete product
-app.route("/delete").post(function (req, res) {
+app.route('/delete').post(function (req, res) {
   const productName = req.body.name;
 
   Product.deleteOne({ name: productName }, function (err) {
     if (!err) {
-      res.redirect("/admin");
+      res.redirect('/admin');
     } else {
       console.log(err);
     }
@@ -391,24 +389,24 @@ app.route("/delete").post(function (req, res) {
 });
 
 // Featured Products
-app.route("/featured-products").post(function (req, res) {
+app.route('/featured-products').post(function (req, res) {
   const featuredProduct = req.body.featuredProduct;
   const operation = req.body.operation;
 
-  if (operation === "add") {
+  if (operation === 'add') {
     Product.updateOne(
       { name: featuredProduct },
-      { featured: "true" },
+      { featured: 'true' },
       function (err, product) {
-        res.redirect("admin");
+        res.redirect('admin');
       }
     );
   } else {
     Product.updateOne(
       { name: featuredProduct },
-      { featured: "false" },
+      { featured: 'false' },
       function (err, product) {
-        res.redirect("admin");
+        res.redirect('admin');
       }
     );
   }
@@ -416,13 +414,13 @@ app.route("/featured-products").post(function (req, res) {
 
 // Order Management Route
 app
-  .route("/order/:productId")
+  .route('/order/:productId')
   .get(function (req, res) {
     const productId = req.params.productId;
 
     Order.findOne({ _id: productId }, function (err, orderInfo) {
       if (!err) {
-        res.render("orderDetails", { order: orderInfo });
+        res.render('orderDetails', { order: orderInfo });
       } else {
         console.log(err);
       }
@@ -431,10 +429,10 @@ app
   .post(function (req, res) {
     const productId = req.params.productId;
 
-    if (req.body.orderStatus === "Delete") {
+    if (req.body.orderStatus === 'Delete') {
       Order.deleteOne({ _id: productId }, function (err) {
         if (!err) {
-          res.redirect("/admin");
+          res.redirect('/admin');
         } else {
           console.log(err);
         }
@@ -445,7 +443,7 @@ app
         { orderStatus: req.body.orderStatus },
         function (err, product) {
           if (!err) {
-            res.redirect("/order/" + productId);
+            res.redirect('/order/' + productId);
           } else {
             console.log(err);
           }
@@ -456,13 +454,13 @@ app
 
 // Customer Order Details
 app
-  .route("/customer/order/:productId")
+  .route('/customer/order/:productId')
   .get(function (req, res) {
     const productId = req.params.productId;
 
     Order.findOne({ _id: productId }, function (err, orderInfo) {
       if (!err) {
-        res.render("customerOrder", { order: orderInfo });
+        res.render('customerOrder', { order: orderInfo });
       } else {
         console.log(err);
       }
@@ -471,21 +469,21 @@ app
   .post(function (req, res) {
     const productId = req.params.productId;
     Order.findOne({ _id: productId }, function (err, orderInfo) {
-      if (!err && orderInfo.orderStatus === "Pending") {
+      if (!err && orderInfo.orderStatus === 'Pending') {
         Order.updateOne(
           { _id: productId },
-          { orderStatus: "Canceled" },
+          { orderStatus: 'Canceled' },
           function (err, product) {
             if (!err) {
-              res.redirect("/account");
+              res.redirect('/account');
             } else {
               console.log(err);
             }
           }
         );
       } else {
-        if (!err && orderInfo.orderStatus !== "Pending") {
-          res.redirect("/customer/order/" + productId);
+        if (!err && orderInfo.orderStatus !== 'Pending') {
+          res.redirect('/customer/order/' + productId);
         } else {
           console.log(err);
         }
@@ -494,12 +492,12 @@ app
   });
 
 // All Products Route
-app.route("/products").get(function (req, res) {
+app.route('/products').get(function (req, res) {
   Product.find(function (err, products) {
     if (err) {
       console.log(err);
     } else {
-      res.render("allProduct", {
+      res.render('allProduct', {
         category: products.category,
         products: products,
       });
@@ -508,7 +506,7 @@ app.route("/products").get(function (req, res) {
 });
 
 // All products filter route
-app.route("/products/price/:min/:max").get(function (req, res) {
+app.route('/products/price/:min/:max').get(function (req, res) {
   const min = req.params.min;
   const max = req.params.max;
 
@@ -516,7 +514,7 @@ app.route("/products/price/:min/:max").get(function (req, res) {
     if (err) {
       console.log(err);
     } else {
-      res.render("allProduct", {
+      res.render('allProduct', {
         category: products.category,
         products: products,
       });
@@ -526,14 +524,14 @@ app.route("/products/price/:min/:max").get(function (req, res) {
 
 // Category Routes
 
-app.route("/category/:categoryRoute").get(function (req, res) {
+app.route('/category/:categoryRoute').get(function (req, res) {
   const categoryRoute = req.params.categoryRoute;
   const categoryLower = _.lowerFirst(categoryRoute);
   Product.find({ category: categoryRoute }, function (err, products) {
     if (err) {
       console.log(err);
     } else {
-      res.render("category", {
+      res.render('category', {
         category: _.upperFirst(categoryRoute),
         categoryLower: categoryLower,
         products: products,
@@ -544,7 +542,7 @@ app.route("/category/:categoryRoute").get(function (req, res) {
 
 // Filter Route
 app
-  .route("/category/:categoryRoute/price/:min/:max")
+  .route('/category/:categoryRoute/price/:min/:max')
   .get(function (req, res) {
     const categoryRoute = _.lowerFirst(req.params.categoryRoute);
     const min = req.params.min;
@@ -557,7 +555,7 @@ app
         if (err) {
           console.log(err);
         } else {
-          res.render("category", {
+          res.render('category', {
             category: _.upperFirst(categoryRoute),
             categoryLower: categoryRoute,
             products: products,
@@ -569,7 +567,7 @@ app
   .post(function (req, res) {});
 
 // Products Page
-app.route("/category/:categoryName/:productName").get(function (req, res) {
+app.route('/category/:categoryName/:productName').get(function (req, res) {
   const categoryName = req.params.categoryName;
   const productName = req.params.productName;
 
@@ -590,7 +588,7 @@ app.route("/category/:categoryName/:productName").get(function (req, res) {
                 $group: {
                   _id: null,
                   count: { $sum: 1 },
-                  total: { $sum: "$score" },
+                  total: { $sum: '$score' },
                 },
               },
             ],
@@ -598,7 +596,7 @@ app.route("/category/:categoryName/:productName").get(function (req, res) {
               if (!err) {
                 console.log(found[0]);
                 if (found[0] != undefined) {
-                  res.render("product", {
+                  res.render('product', {
                     imageUrl: product.imageUrl,
                     name: product.name,
                     description: product.description,
@@ -610,7 +608,7 @@ app.route("/category/:categoryName/:productName").get(function (req, res) {
                     numOfReviewer: found[0].count,
                   });
                 } else {
-                  res.render("product", {
+                  res.render('product', {
                     imageUrl: product.imageUrl,
                     name: product.name,
                     description: product.description,
@@ -634,7 +632,7 @@ app.route("/category/:categoryName/:productName").get(function (req, res) {
 });
 
 // Review Route
-app.route("/review/:category/:productName").post(function (req, res) {
+app.route('/review/:category/:productName').post(function (req, res) {
   const score = req.body.score;
   const comment = req.body.comment;
   const category = req.params.category;
@@ -642,11 +640,16 @@ app.route("/review/:category/:productName").post(function (req, res) {
 
   if (req.isAuthenticated()) {
     const review = new Review({
-      userName: req.user.fName + " " + req.user.lName,
+      userName: req.user.fName + ' ' + req.user.lName,
       productName: req.body.productName,
       score: score,
       comment: comment,
-      date: new Date().toDateString(),
+      date: new Date().toLocaleDateString(undefined, {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }),
     });
 
     console.log(review, req.body.productName);
@@ -654,22 +657,22 @@ app.route("/review/:category/:productName").post(function (req, res) {
       if (err) {
         console.log(err);
       } else {
-        res.redirect("/category/" + category + "/" + product);
+        res.redirect('/category/' + category + '/' + product);
       }
     });
   } else {
-    res.redirect("/login");
+    res.redirect('/login');
   }
 });
 
 // Register Route
 app
-  .route("/register")
+  .route('/register')
   .get(function (req, res) {
     if (req.isAuthenticated()) {
-      res.redirect("/account");
+      res.redirect('/account');
     } else {
-      res.render("register");
+      res.render('register');
     }
   })
   .post(function (req, res) {
@@ -684,31 +687,31 @@ app
         password,
         function (err, user) {
           if (err) {
-            res.redirect("/register");
+            res.redirect('/register');
           } else {
-            passport.authenticate("local")(req, res, function () {
-              res.redirect("/products");
+            passport.authenticate('local')(req, res, function () {
+              res.redirect('/products');
             });
           }
         }
       );
     } else {
-      res.redirect("/register");
+      res.redirect('/register');
     }
   });
 
 // Login Route
 app
-  .route("/login")
+  .route('/login')
   .get(function (req, res) {
     if (req.isAuthenticated()) {
-      if (req.user.username === "admin@admin.com") {
-        res.redirect("/admin");
+      if (req.user.username === 'admin@admin.com') {
+        res.redirect('/admin');
       } else {
-        res.redirect("/account");
+        res.redirect('/account');
       }
     } else {
-      res.render("login");
+      res.render('login');
     }
   })
 
@@ -720,13 +723,13 @@ app
 
     req.login(user, function (err) {
       if (err) {
-        res.redirect("/login");
+        res.redirect('/login');
       } else {
-        passport.authenticate("local")(req, res, function () {
-          if (req.user.username === "admin@admin.com") {
-            res.redirect("/admin");
+        passport.authenticate('local')(req, res, function () {
+          if (req.user.username === 'admin@admin.com') {
+            res.redirect('/admin');
           } else {
-            res.redirect("/products");
+            res.redirect('/products');
           }
         });
       }
@@ -734,13 +737,13 @@ app
   });
 
 // Account Route
-app.route("/account").get(function (req, res) {
+app.route('/account').get(function (req, res) {
   if (req.isAuthenticated()) {
     Order.find({ userId: req.user._id }, function (err, orders) {})
       .sort({ date: -1 })
       .exec(function (err, orders) {
         if (!err) {
-          res.render("account", {
+          res.render('account', {
             fName: req.user.fName,
             lName: req.user.lName,
             orders: orders,
@@ -750,14 +753,14 @@ app.route("/account").get(function (req, res) {
         }
       });
   } else {
-    res.redirect("/login");
+    res.redirect('/login');
   }
 });
 
 // Logout Route
-app.route("/logout").get(function (req, res) {
+app.route('/logout').get(function (req, res) {
   req.logout();
-  res.redirect("/login");
+  res.redirect('/login');
 });
 
 // Cart Function
@@ -818,7 +821,7 @@ function Cart(oldCart) {
 }
 
 // Cart Route
-app.route("/add-to-cart/:name").get(function (req, res) {
+app.route('/add-to-cart/:name').get(function (req, res) {
   const name = req.params.name;
   const cart = new Cart(req.session.cart ? req.session.cart : {});
 
@@ -829,49 +832,49 @@ app.route("/add-to-cart/:name").get(function (req, res) {
       cart.add(product, product.name, product.size);
       req.session.cart = cart;
       console.log(req.session.cart);
-      res.redirect("/category/" + product.category + "/" + name);
+      res.redirect('/cart');
     }
   });
 });
 
 // IncreaseByOne
-app.route("/increase/:name").get(function (req, res) {
+app.route('/increase/:name').get(function (req, res) {
   const name = req.params.name;
   const cart = new Cart(req.session.cart ? req.session.cart : {});
 
   cart.increaseByOne(name);
   req.session.cart = cart;
-  res.redirect("/cart");
+  res.redirect('/cart');
 });
 
 // ReduceByOne
-app.route("/reduce/:name").get(function (req, res) {
+app.route('/reduce/:name').get(function (req, res) {
   const name = req.params.name;
   const cart = new Cart(req.session.cart ? req.session.cart : {});
 
   cart.reduceByOne(name);
   req.session.cart = cart;
-  res.redirect("/cart");
+  res.redirect('/cart');
 });
 
 // RemoveItems
-app.route("/removeItem/:name").get(function (req, res) {
+app.route('/removeItem/:name').get(function (req, res) {
   const name = req.params.name;
   const cart = new Cart(req.session.cart ? req.session.cart : {});
 
   cart.removeItem(name);
   req.session.cart = cart;
-  res.redirect("/cart");
+  res.redirect('/cart');
 });
 
 // Cart Route
-app.route("/cart").get(function (req, res) {
+app.route('/cart').get(function (req, res) {
   if (!req.session.cart) {
-    res.render("cart", { products: null });
+    res.render('cart', { products: null });
   } else {
     const cart = new Cart(req.session.cart);
 
-    res.render("cart", {
+    res.render('cart', {
       products: cart.generateArray(),
       totalPrice: cart.totalPrice,
       totalItems: cart.totalItems,
@@ -881,14 +884,14 @@ app.route("/cart").get(function (req, res) {
 
 // Checkout Route
 app
-  .route("/checkout")
+  .route('/checkout')
   .get(function (req, res) {
     if (!req.session.cart) {
-      res.redirect("/cart");
+      res.redirect('/cart');
     } else {
       const cart = new Cart(req.session.cart);
 
-      res.render("checkout", { total: cart.totalPrice });
+      res.render('checkout', { total: cart.totalPrice });
     }
   })
   .post(function (req, res) {
@@ -905,7 +908,7 @@ app
     if (req.isAuthenticated()) {
       const order = new Order({
         userId: req.user._id,
-        userName: req.user.fName + " " + req.user.lName,
+        userName: req.user.fName + ' ' + req.user.lName,
         mobileNumber: mobileNumber,
         products: products,
         address: address,
@@ -916,7 +919,12 @@ app
           bkashNumber: bkashNumber,
           bkashTrxID: bkashTrxID,
         },
-        date: new Date().toDateString(),
+        date: new Date().toLocaleDateString(undefined, {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }),
       });
 
       order.save(function (err) {
@@ -924,24 +932,24 @@ app
           console.log(err);
         } else {
           req.session.cart = null;
-          res.redirect("/success");
+          res.redirect('/success');
         }
       });
     } else {
-      res.redirect("/login");
+      res.redirect('/login');
     }
   });
 
 // Order Success
-app.route("/success").get(function (req, res) {
-  res.render("orderSuccess");
+app.route('/success').get(function (req, res) {
+  res.render('orderSuccess');
 });
 
 //server port
 let port = process.env.PORT;
-if (port == null || port == "") {
+if (port == null || port == '') {
   port = 3000;
 }
 app.listen(port, function () {
-  console.log("server started on port " + port);
+  console.log('server started on port ' + port);
 });
